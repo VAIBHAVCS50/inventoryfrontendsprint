@@ -9,7 +9,7 @@ import {
   name,
   stubbedPublicClientApplicationCalled,
   version
-} from "./chunk-NSJEFZLJ.js";
+} from "./chunk-LG2ZTICZ.js";
 import {
   BridgeStatusCode
 } from "./chunk-6RNKDNDV.js";
@@ -30,12 +30,12 @@ import {
   PerformanceClient,
   PopTokenGenerator,
   createNewGuid
-} from "./chunk-7GWHEDI2.js";
+} from "./chunk-W3QDAZMO.js";
 import {
   __async,
   __spreadProps,
   __spreadValues
-} from "./chunk-NINA3NFV.js";
+} from "./chunk-VN5LFIMW.js";
 
 // node_modules/@azure/msal-browser/dist/operatingcontext/BaseOperatingContext.mjs
 var BaseOperatingContext = class _BaseOperatingContext {
@@ -348,7 +348,7 @@ function createV3Controller(config) {
   return __async(this, null, function* () {
     const standard = new StandardOperatingContext(config);
     yield standard.initialize();
-    const controller = yield import("./StandardController-TGJBDLYR.js");
+    const controller = yield import("./StandardController-E5ZZYMID.js");
     return controller.StandardController.createController(standard);
   });
 }
@@ -359,10 +359,10 @@ function createController(config) {
     const operatingContexts = [standard.initialize(), teamsApp.initialize()];
     yield Promise.all(operatingContexts);
     if (teamsApp.isAvailable()) {
-      const controller = yield import("./NestedAppAuthController-7KRJUOJV.js");
+      const controller = yield import("./NestedAppAuthController-EO23AAP2.js");
       return controller.NestedAppAuthController.createController(teamsApp);
     } else if (standard.isAvailable()) {
-      const controller = yield import("./StandardController-TGJBDLYR.js");
+      const controller = yield import("./StandardController-E5ZZYMID.js");
       return controller.StandardController.createController(standard);
     } else {
       return null;
@@ -1497,7 +1497,7 @@ function getPerfMeasurementModule() {
     sessionStorage = window[BrowserCacheLocation.SessionStorage];
     const perfEnabled = sessionStorage?.getItem(BROWSER_PERF_ENABLED_KEY);
     if (Number(perfEnabled) === 1) {
-      return import("./BrowserPerformanceMeasurement-DAA3A3BD.js");
+      return import("./BrowserPerformanceMeasurement-5BZ6E5QF.js");
     }
   } catch (e) {
   }
@@ -1677,4 +1677,4 @@ export {
 @azure/msal-browser/dist/index.mjs:
   (*! @azure/msal-browser v3.14.0 2024-05-07 *)
 */
-//# sourceMappingURL=chunk-EHQHYX2B.js.map
+//# sourceMappingURL=chunk-W7DLQCI4.js.map

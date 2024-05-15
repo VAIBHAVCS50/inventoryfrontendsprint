@@ -5,7 +5,7 @@ import {
   PublicClientNext,
   SignedHttpRequest,
   stubbedPublicClientApplication
-} from "./chunk-EHQHYX2B.js";
+} from "./chunk-W7DLQCI4.js";
 import {
   BrowserConfigurationAuthError,
   BrowserConfigurationAuthErrorCodes_exports,
@@ -15,7 +15,7 @@ import {
   DEFAULT_IFRAME_TIMEOUT_MS,
   NavigationClient,
   version
-} from "./chunk-NSJEFZLJ.js";
+} from "./chunk-LG2ZTICZ.js";
 import "./chunk-6RNKDNDV.js";
 import {
   AccountEntity,
@@ -57,11 +57,11 @@ import {
   StubPerformanceClient,
   UrlString,
   WrapperSKU
-} from "./chunk-7GWHEDI2.js";
+} from "./chunk-W3QDAZMO.js";
 import {
   BrowserPerformanceMeasurement
 } from "./chunk-WOURYK44.js";
-import "./chunk-NINA3NFV.js";
+import "./chunk-VN5LFIMW.js";
 export {
   AccountEntity,
   ApiId,
