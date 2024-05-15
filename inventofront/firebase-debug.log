@@ -1,0 +1,42 @@
+[debug] [2024-05-15T05:02:02.301Z] ----------------------------------------------------------------------
+[debug] [2024-05-15T05:02:02.304Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\inpuvma\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-05-15T05:02:02.304Z] CLI Version:   13.9.0
+[debug] [2024-05-15T05:02:02.304Z] Platform:      win32
+[debug] [2024-05-15T05:02:02.304Z] Node Version:  v20.11.1
+[debug] [2024-05-15T05:02:02.304Z] Time:          Wed May 15 2024 10:32:02 GMT+0530 (India Standard Time)
+[debug] [2024-05-15T05:02:02.304Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-05-15T05:02:02.312Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-05-15T05:02:02.312Z] > authorizing via signed-in user (vaibhavmakhloga01@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\inpuvma\OneDrive - Alfa Laval\Desktop\RRRfrontend\inventofront
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2024-05-15T05:03:11.658Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2024-05-15T05:03:12.295Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2024-05-15T05:03:12.296Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project inventorymanagement-e1ad3 (inventorymanagement) 
+[info] 
+=== Hosting Setup
+[debug] [2024-05-15T05:03:15.101Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/inventorymanagement-e1ad3 [none]
+[debug] [2024-05-15T05:03:15.438Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/inventorymanagement-e1ad3 200
+[debug] [2024-05-15T05:03:15.438Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/inventorymanagement-e1ad3 {"projectId":"inventorymanagement-e1ad3","projectNumber":"618798495915","displayName":"inventorymanagement","name":"projects/inventorymanagement-e1ad3","resources":{"hostingSite":"inventorymanagement-e1ad3"},"state":"ACTIVE","etag":"1_3aa0ba84-8e77-4f41-8f6d-dd0d64a307de"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 

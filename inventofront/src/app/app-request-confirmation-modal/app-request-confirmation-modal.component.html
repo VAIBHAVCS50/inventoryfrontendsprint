@@ -1,0 +1,100 @@
+<!-- <div class="modal fade show" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Request Comformation</h5>
+        </div>
+        <div class="modal-body">
+          <dl class="row">
+            <dt class="col-sm-4">Specification ID:</dt>
+            <dd class="col-sm-8">{{ equipment?.categoryId }}</dd>
+  
+            <dt class="col-sm-4">Brand:</dt>
+            <dd class="col-sm-8">{{ equipment?.brand }}</dd>
+  <br>
+            <dt class="col-sm-4">Quantity:</dt>
+            <dd class="col-sm-8">{{ equipment?.requestedQuantity }}</dd>
+    <br>
+            <dt class="col-sm-4">Description:</dt>
+            <dd class="col-sm-8">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, magnam?</dd>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="cancelRequest()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div> -->
+
+
+
+  <!-- export interface RequestWithUserDetailsDTO {
+    userId: string;
+    requestId: string;
+    equipmentId: string;
+    userName: string;
+    userEmail: string;
+    userRole: string;
+    requestLocation: Location;
+    requestDate: Date;
+    brand: string;
+    type: string;
+    specificationId: string;
+  } -->
+  <div class="modal fade show" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ title }}</h5>
+        </div>
+        <div class="modal-body">
+            <ng-container *ngIf="title === 'Approve Request' || title === 'Reject Request'">
+            <dl class="row">
+              <dt class="col-sm-4">User Name:</dt>
+              <dd class="col-sm-8">{{ equipment.userName }}</dd>
+    
+              <dt class="col-sm-4">Email:</dt>
+              <dd class="col-sm-8">{{ equipment.userEmail }}</dd>
+              
+              <dt class="col-sm-4">Brand:</dt>
+              <dd class="col-sm-8">{{ equipment.brand }}</dd>
+
+              <dt class="col-sm-4">Type:</dt>
+              <dd class="col-sm-8">{{ equipment.Type }}</dd>
+
+              <dt class="col-sm-4">Location:</dt>
+              <dd class="col-sm-8">{{ equipment.requestLocation }}</dd>
+
+              <dt class="col-sm-4">Specification ID:</dt>
+              <dd class="col-sm-8">{{ equipment.specificationId }}</dd>
+              <!-- Add more details as needed -->
+            </dl>
+          </ng-container>
+          <!-- Add more ng-container blocks for other titles -->
+          <ng-container *ngIf="title != 'Confirm Approval'">
+            <dl class="row">
+                <dt class="col-sm-4">Specification ID:</dt>
+                <dd class="col-sm-8">{{ equipment?.categoryId }}</dd>
+      
+                <dt class="col-sm-4">Brand:</dt>
+                <dd class="col-sm-8">{{ equipment?.brand }}</dd>
+      <br>
+                <dt class="col-sm-4">Quantity:</dt>
+                <dd class="col-sm-8">{{ equipment?.requestedQuantity }}</dd>
+        <br>
+                <dt class="col-sm-4">Description:</dt>
+                <dd class="col-sm-8">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, magnam?</dd>
+              </dl>
+          </ng-container>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="cancelRequest()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+  

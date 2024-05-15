@@ -1,0 +1,72 @@
+.main-content {
+    padding-top: 3rem; /* Adjust the value as needed */
+     /* Adjust the value as needed */
+  }
+  /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 960px;
+    margin: auto;
+  }
+  
+  /* Card Styles */
+  .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-title {
+    font-size: 1.75rem;
+    color: #11387F;
+  }
+  
+  /* Form Styles */
+  .form-control, .form-select {
+    border-radius: 5px;
+    border: 1px solid #aaadaf;
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+    background-color: #11387F;
+    border-color: #11387F;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+  
+  /* Add more styles as needed */
+  .tooltip-container {
+    position: relative;
+  }
+  
+  .tooltip-message {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.5rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+  }

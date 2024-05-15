@@ -1,0 +1,93 @@
+<div *ngIf="requestInProgress" class="loader-container">
+  <div style="margin-left: 50px;" class="loader"></div>
+  <p  class="processing-text">Fetching Request Data...</p>
+</div>
+<div class="bodd">
+<div class=" container mt-5">
+    <div *ngIf="buttonId === 'request-history'">
+        <div class="card">
+     
+      <div *ngIf="data && data.length > 0">
+        <div class="card-header sticky-header text-center" style="background-color: #11387F; color: white; font-size: 20px;">
+            Request Status
+          </div>
+        <div class="card-body table-responsive">
+            <table class="table table-striped">
+            <thead >
+              <tr>
+                <th scope="col">Request ID</th>
+                <th scope="col">Status</th>
+                <th scope="col">Equipment ID</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Type</th>
+                <th scope="col">Specification ID</th>
+                <th scope="col">Request Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of data">
+                <td>{{ item.requestId }}</td>
+                <td>{{ item.requestStatus }}</td>
+                <td>{{ item.equipmentId }}</td>
+                <td>{{ item.brand }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.specificationId }}</td>
+                <td>{{ item.requestDate|date }}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        </div>
+        <div *ngIf="!data || data.length === 0" class="text-center no-data">
+            <p>No request history data available.</p>
+        </div>
+    </div>
+   
+    
+    <div *ngIf="buttonId === 'issued-gatepass'">
+          <div class="card">
+     
+      <div *ngIf="data && data.length > 0">
+        <div class="card-header sticky-header text-center" style="background-color: #11387F; color: white; font-size: 20px;">
+            Issued Gatepasses
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-striped">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Gatepass ID</th>
+                <th scope="col">User Name</th>
+                <th scope="col">User Email</th>
+                <th scope="col">Approver Name</th>
+                <th scope="col">Approver Email</th>
+                <th scope="col">Issue Date</th>
+                <th scope="col">Approval Date</th>
+                <th scope="col">Expiry Date</th>
+                <th scope="col">Live</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of data">
+                <td>{{ item.gatepassId }}</td>
+                <td>{{ item.employeeName }}</td>
+                <td>{{ item.employeeEmail }}</td>
+                <td>{{ item.approverName }}</td>
+                <td>{{ item.approverEmail }}</td>
+                <td>{{ item.issueDate | date }}</td>
+                <td>{{ item.approvalDate | date }}</td>
+                <td>{{ item.expiryDate | date }}</td>
+                <td>{{ item.isLive }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+      <div *ngIf="!data || data.length === 0" class="text-center no-data">
+        <p>No issued gatepasses data available.</p>
+      </div>
+    </div>
+  </div>
+</div>

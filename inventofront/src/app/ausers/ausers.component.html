@@ -1,0 +1,47 @@
+<div *ngIf="requestInProgress" class="loader-container">
+  <div class="loader"></div>
+</div>
+<div class="bodd">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-11">
+            <div class="card">
+              <div class="card-header sticky-header text-center" style="background-color: #11387F; color: white; font-size: 20px;">
+                Request Status
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Designation</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let employee of employees">
+                      <td>{{ employee.fname }} {{ employee.lname }}</td>
+                      <td>{{ employee.email }}</td>
+                      <td>{{ employee.position }}</td>
+                      <td>{{ employee.role }}</td>
+                      <td>
+                        <button class="btn btn-outline-info btn-sm mr-2" [routerLink]="['/requesthistory', employee.userId,'request-history']">
+                          <i class="fas fa-history"></i> Request History
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" [routerLink]="['/requesthistory', employee.userId,'issued-gatepass']">
+                          <i class="fas fa-assignment"></i> Issued Gatepass
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+  

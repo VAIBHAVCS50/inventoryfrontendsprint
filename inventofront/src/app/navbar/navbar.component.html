@@ -1,0 +1,87 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="https://upload.wikimedia.org/wikipedia/en/2/22/Alfa_Laval.svg" alt="Alfa Laval" width="150" height="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" routerLink="welcome" aria-current="page" ><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"  routerLink="about"><i class="fas fa-info-circle"></i> About Us</a>
+        </li>
+        <li class="nav-item" *ngIf="role=='admin'">
+          <a class="nav-link"  routerLink="add-equipment"><i class="fas fa-plus-circle"></i> Add New Equipment</a>
+        </li>
+        <li class="nav-item" *ngIf="role=='admin'">
+          <a class="nav-link"  routerLink="users"><i class="fa-solid fa-user"></i> View Users</a>
+        </li>
+        <li class="nav-item" *ngIf="loginDisplay">
+          <a class="nav-link" routerLink="profile" ><i class="fas fa-user"></i> My Info</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="loginDisplay">
+          <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-cogs"></i> Request
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item"  routerLink="requeststatus">View Requests</a></li>
+            <li><a class="dropdown-item"  routerLink="viewequipments">Request Equipment</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" >Equipment Not Found</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <button class="btn btn-outline-success me-2" type="submit" *ngIf="!loginDisplay" (click)="login()">Login</button>
+        <button class="btn btn-outline-danger" type="submit" *ngIf="loginDisplay" (click)="logout()">Logout</button>
+      </form>
+      <!-- <div *ngIf="photoloaded" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img [src]="profilePhotoUrl" alt="Profile" class="profile-photo rounded-circle me-2" width="30" height="30">
+          My Profile
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+          <li>
+            <div class="card">
+              <img [src]="profilePhotoUrl" alt="Profile" class="card-img-top rounded-circle mx-auto mt-3" style="width: 80px; height: 80px;">
+              <div class="card-body text-center">
+                <h5 class="card-title">{{ vab.givenName }} {{ vab.surname }}</h5>
+                <p class="card-text">{{ vab.jobTitle }}</p>
+                <button class="btn btn-danger" (click)="logout()">Logout</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div> -->
+    </div>
+  </div>
+</nav>
+
+<!-- Profile Card Template -->
+<!-- <ng-template #profileContent>
+  <div class="profile-card mb-4">
+    <div class="text-center"> -->
+      <!-- <img [src]="getProfilePhotoUrl(profilePhotoBlob)" class="rounded-circle img-fluid mb-3" alt="Profile Photo" width="150" *ngIf="profilePhotoBlob; else defaultProfileImage"> -->
+      <!-- <h3>{{ vab.givenName }}</h3>
+      <p class="mb-3">{{ vab.userPrincipalName }}</p>
+      <p class="mb-3">{{ vab.jobTitle }}</p>
+      <button class="btn btn-danger" *ngIf="loginDisplay" (click)="logout()" style="margin-right: 8px;">Logout</button>
+    </div>
+  </div>
+</ng-template> -->
+
+<!-- <ng-template #defaultProfileImage>
+  <div class="default-icon-wrapper" [ngbPopover]="profileContent" [popoverTitle]="vab.givenName" triggers="click">
+    <i class="bi bi-person-circle"></i>
+  </div>
+</ng-template> -->
+
+<router-outlet></router-outlet>
+
+
+
+

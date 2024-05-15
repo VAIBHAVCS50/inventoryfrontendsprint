@@ -1,0 +1,15 @@
+<div class="bodd profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <img [src]="profilePhotoUrl" alt="Profile Picture">
+    </div>
+    <div class="profile-details">
+      <h2>{{ profile.givenName }} {{ profile.surname }}</h2>
+      <p class="job-title"><i class="fas fa-briefcase"></i> {{ profile.jobTitle }}</p>
+      <p class="user-email"><i class="fas fa-envelope"></i> {{ profile.userPrincipalName }}</p>
+    </div>
+  </div>
+  <div class="profile-body">
+    <p class="profile-id">User ID: {{ profile.id }}</p>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+.table-container {
+    max-height: 500px; /* Adjust as needed */
+    overflow-y: auto;
+    overflow-x: auto; /* Enable horizontal scrolling */
+
+  }
+  .sticky-header {
+    background-color: #11387F;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1020; /* Adjust z-index as needed */
+  }
+  .table {
+    min-width: 1200px; /* Set a minimum width for the table */
+  }
+  .table th, .table td {
+    white-space: nowrap; /* Keep content in single line */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Add ellipsis to overflow content */
+    padding: 0.5rem; /* Adjust padding as needed */
+  }
+  /* Custom widths for table columns */
+
+
+  .main-content {
+  padding-top: 70px; /* Adjust this value based on the actual height of your navbar */
+ 
+}
+
+.loader-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensure the loader is above other elements */
+}
+
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #007bff; /* Loader color */
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.thisisit{
+  background-color: #ff0707; /* Light green for Approved */
+}
+
+.table-dangerr {
+  background-color: #f8d7da; /* Light red for Denied */
+}
+
+.table-warningg {
+  background-color: #fff3cd; /* Light yellow for Pending */
+}

@@ -1,0 +1,163 @@
+.table-responsive {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  
+  thead {
+    background-color: #f8f9fa;
+  }
+  
+  th {
+    font-weight: bold;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .alert {
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+  }
+  
+  .alert-message {
+    font-size: 14px;
+  }
+  
+  .btn-close {
+    font-size: 1rem;
+    color: #155724;
+    opacity: 0.5;
+  }
+  
+  .btn-close:hover {
+    opacity: 1;
+  }
+  
+  .card {
+    padding: 1rem;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  
+
+  .card-img-top {
+    width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensure the image covers the area without stretching */
+  }
+  
+  // .card-title {
+  //   font-size: 1.25rem;
+  //   margin-bottom: 0.5rem;
+  // }
+  
+  // .card-text {
+  //   font-size: 0.9rem;
+  //   color: #6c757d;
+  // }
+  
+  .btn-group .btn {
+    margin: 0 5px; /* Adds horizontal space between buttons */
+  }
+  
+  .btn-group {
+    margin-bottom: 10px; /* Adds space below the button group */
+  }
+  
+  .btn-primary {
+    margin-left: 5px; /* Adds space to the left of the primary button */
+  }
+  
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  @media (max-width: 768px) {
+    .card {
+      margin-bottom: 1rem;
+    }
+  }
+.main-content {
+  padding-top: 70px; /* Adjust this value based on the actual height of your navbar */
+  
+}
+
+
+
+.toast {
+  border-radius: 0.25rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+
+.toast-header {
+  align-items: center;
+  background-color: #198754; /* Green background for success */
+  border-bottom: none;
+}
+
+.toast-body {
+  background-color: #212529; /* Dark background for contrast */
+  color: #ffffff; /* White text for readability */
+}
+
+.loader-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensure the loader is above other elements */
+}
+
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #007bff; /* Loader color */
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card-body {
+  color: #333; /* Darker text for better contrast */
+}
+
+.card-title {
+  font-weight: 600; /* Bolder font for titles */
+  font-size: 1.1rem; /* Slightly larger font size */
+}
+
+.card-text {
+  font-weight: 400; /* Normal font weight for body text */
+  
+}
+
+.fas {
+  margin-right: 0.5rem; /* Adjust the value as needed */
+}

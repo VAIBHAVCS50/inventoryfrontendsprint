@@ -1,0 +1,114 @@
+
+<div *ngIf="requestInProgress" class="loader-container">
+  <div class="loader"></div>
+</div>
+  <section class="main-content">
+ 
+        <div class="container-fluid">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-11">
+        <div class="card">
+          <h2 class="card-header sticky-header text-center">Request Status</h2>
+          <div class="card-body">
+            <!-- Loader -->
+            <div *ngIf="loading" class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p>Loading equipment data...</p>
+            </div>
+            <!-- Request status table for employee -->
+            <div *ngIf="!loading && role.role === 'employee'">
+              <div *ngIf="requestStatusList.length > 0; else noRequestsMessage">
+                <div class="table-container">
+                  <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Status</th>
+                        <th>Equipment ID</th>
+                        <th>Brand</th>
+                        <th>Type</th>
+                        <th>Specification ID</th>
+                        <th>Request Date</th>
+                        <th>Actions</th> <!-- Add Actions column -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let requestStatus of requestStatusList"
+                          [ngClass]="getStatusClass(requestStatus.requestStatus)">
+                        <td>{{ requestStatus.requestStatus }}</td>
+                        <td>{{ requestStatus.equipmentId }}</td>
+                        <td>{{ requestStatus.brand }}</td>
+                        <td>{{ requestStatus.type }}</td>
+                        <td>{{ requestStatus.specificationId }}</td>
+                        <td>{{ requestStatus.requestDate|date }}</td>
+            
+                        <td>
+                          <!-- Additional button for showing gatepass -->
+                          <button [routerLink]="['/gatepass', requestStatus.requestId]" *ngIf="requestStatus.requestStatus === 'Approved'" class="btn btn-primary btn-sm">Show Gatepass</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <ng-template #noRequestsMessage>
+                <p class="no-requests-message">No requests found for the user.</p>
+              </ng-template>
+            </div>
+            <!-- Request status table for admin -->
+            <div *ngIf="!loading && (role.role === 'admin'||role.role === 'manager')">
+              <div *ngIf="requestWithUserDetailsList.length > 0; else noRequestsMessage">
+                <div class="table-container">
+                  <table class="table table-striped">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>User Name</th>
+                        <th>User Email</th>
+                        <th>Type</th>
+                        <th>Brand</th>
+                        <th>Specification ID</th>
+                        <th>Request Location</th>
+                        <th>Request Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let requestDetails of requestWithUserDetailsList">
+                        <td>{{ requestDetails.userName }}</td>
+                        <td>{{ requestDetails.userEmail }}</td>
+                        <td>{{ requestDetails.type }}</td>
+                        <td>{{ requestDetails.brand }}</td>
+                        <td>{{ requestDetails.specificationId }}</td>
+                        <td>{{ requestDetails.requestLocation }}</td>
+                        <td>{{ requestDetails.requestDate | date:'yyyy-MM-dd' }}</td>
+
+                        <td>
+                          <!-- Approve and reject buttons -->
+                          <button class="btn btn-success btn-sm me-2" (click)="openRequestModal(requestDetails,'Approve Request')">Approve</button>
+                          <button class="btn btn-danger btn-sm" (click)="openRequestModal(requestDetails,'Reject Request')">Reject</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <ng-template #noRequestsMessage>
+                <p class="no-requests-message">No requests found.</p>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  <app-app-request-confirmation-modal
+  *ngIf="showRequestModal"
+  [title]="modalTitle" 
+  [equipment]="selectedEquipment"
+  (confirm)="confirmRequest()"
+  (cancel)="cancelRequest()"
+  (close)="changep()"
+  >
+</app-app-request-confirmation-modal>
