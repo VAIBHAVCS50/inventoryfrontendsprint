@@ -1,134 +1,109 @@
-
-<div *ngIf="requestInProgress" class="loader-container">
-  <div class="loader"></div>
+<div *ngIf="!isAuthenticated" class="auth-container">
+  <div class="auth-content text-center">
+    <h1 class="display-4">Welcome, User!</h1>
+    <p class="lead">Please log in to access the inventory management platform.</p>
+  </div>
 </div>
-<!-- home.component.html -->
-<div *ngIf="showSuccessAlert" aria-live="polite" aria-atomic="true" class="main-content1 position-fixed top-0 end-0 p-3" style="z-index: 11">
-  <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header text-white" style="background-color: #198754; border-bottom: none;">
-      <svg class="rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-        <path d="M13.646 2.354a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 9.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-      </svg>
-      <strong class="me-auto">Success</strong>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close" (click)="showSuccessAlert = false"></button>
+
+<div *ngIf="isAuthenticated" class="main-container">
+  <!-- Search Filters -->
+  <!-- Filter Section -->
+<div class="filter-section sticky-top card mb-3">
+  <div class="card-body">
+    <!-- Filter Title -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <h3 class="card-title text-center">Search Filters</h3>
+      </div>
     </div>
-    <div class="toast-body" style="background-color: #212529; color: #ffffff;">
-      Request submitted successfully!
+    <!-- Filters -->
+    <div class="row align-items-center">
+      <!-- Office Selector -->
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="officeSelector">Select Office:</label>
+          <app-office-selector-component id="officeSelector" (officeSelected)="onOfficeSelected($event)"></app-office-selector-component>
+        </div>
+      </div>
+      <!-- Brand Filter -->
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="brand">Brand:</label>
+          <select class="form-control" id="brand" [(ngModel)]="selectedBrands" [disabled]="!selectedOffice" (change)="onFilterChange()">
+            <option value="">All Brands</option>
+            <option *ngFor="let brand of brands" [value]="brand">{{ brand }}</option>
+          </select>
+        </div>
+      </div>
+      <!-- Type Filter -->
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="type">Type:</label>
+          <select class="form-control" id="type" [(ngModel)]="selectedType" [disabled]="!selectedOffice" (change)="onFilterChange()">
+            <option value="">All Types</option>
+            <option *ngFor="let type of types" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+      </div>
+      <!-- Specification ID Filter -->
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="specId">Specification ID:</label>
+          <select class="form-control" id="specId" [(ngModel)]="selectedSpecId" [disabled]="!selectedOffice" (change)="onFilterChange()">
+            <option value="">All Specifications</option>
+            <option *ngFor="let specId of specifications" [value]="specId">{{ specId }}</option>
+          </select>
+        </div>
+      </div>
+      <!-- Search Button -->
+      <div class="col-md-3 text-center">
+        <button class="btn btn-primary mt-4" [disabled]="!selectedOffice" (click)="showEquipments()">Search Equipments</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="!isAuthenticated">
- 
-  <div class="container main-content">
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-8 text-center">
-        <h1 class="display-4 mb-4">Welcome, User!</h1>
-        <p class="lead">Please log in to access the inventory management platform.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
-
-<div *ngIf="isAuthenticated">
-  <!-- <div *ngIf="showSuccessAlert" class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-            <path d="M13.646 2.354a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 9.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-          </svg>
-        </div>
-        <div class="col">
-          <span class="alert-message">Request submitted successfully!</span>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  
-  
-  <div class="container mt-4 main-content">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="mb-4"><i class="fas fa-search"></i> Find Your Equipment</h3>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="brand">Select Brand:</label>
-              <select class="form-control" id="brand" [(ngModel)]="selectedBrands" (change)="onBrandChange()">
-                <option value="">All Brands</option>
-                <option *ngFor="let brand of brands" [value]="brand">{{ brand }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="type">Select Type:</label>
-              <select class="form-control" id="type" [(ngModel)]="selectedType" (change)="onTypeChange()">
-                <option value="">All Types</option>
-                <option *ngFor="let type of types" [value]="type">{{ type }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="specId">Select Specification ID:</label>
-              <select class="form-control" id="specId" [(ngModel)]="selectedSpecId">
-                <option value="">All Specifications</option>
-                <option *ngFor="let specId of specifications" [value]="specId">{{ specId }}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="text-center">
-          <button class="btn btn-primary" (click)="showEquipments()">Search Equipments</button>
-        </div>
-      </div>
-    </div>
-
+  <!-- Equipment List -->
+  <div class="container mt-5" *ngIf="equipments">
     <div class="row">
-      <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let equipment of equipments">
-        <div class="card mb-4 shadow-sm">
-          <img src="https://picsum.photos/700/400" class="card-img-top" alt="Equipment Image">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-tools"></i> {{ equipment.categoryName }}</h5>
-            <p class="card-text"><i class="fas fa-tag"></i> <strong>Brand:</strong> {{ equipment.brand }}</p>
-            <p class="card-text"><i class="fas fa-id-card"></i> <strong>Specification ID:</strong> {{ equipment.categoryId }}</p>
-            <p class="card-text"><i class="fas fa-boxes"></i> <strong>Available Quantity:</strong> {{ equipment.quantity }}</p>
-            <p class="card-text"><i class="fas fa-align-left"></i> <strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, modi. Ea reiciendis repudiandae ut inventore corporis alias totam exercitationem quibusdam!</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="btn-group" *ngIf="equipment.quantity>0">
-                <button class="btn btn-sm btn-outline-secondary" (click)="decreaseQuantity(equipment)" [disabled]="equipment.quantity <= 0"><i class="fas fa-minus"></i></button>
-                <span class="mx-1">{{ equipment.requestedQuantity }}</span>
-                <button class="btn btn-sm btn-outline-secondary" (click)="increaseQuantity(equipment)"><i class="fas fa-plus"></i></button>
-              </div>
-              <button class="btn btn-primary btn-sm" (click)="openModal(equipment.categoryId)">Show Users</button>
-              <button [disabled]="(equipment.quantity==0||equipment.requestedQuantity==0)" class="btn btn-primary btn-sm" (click)="openRequestModal(equipment)">Request</button>
-            </div>
-          </div>
-        </div>
+     
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-equipment [equipments]="equipments" [currentPage]="currentPage" [pageSize]="pageSize" (openModal)="openModal($event)" (addToCart)="addToCart($event)"></app-equipment>
       </div>
     </div>
-    
-    
-    
-    
+  </div>
+
+  <!-- Pagination Controls -->
+  <nav aria-label="Page navigation" *ngIf="(equipments?.length ?? 0) > pageSize" class="pagination-container">
+    <ul class="pagination justify-content-center mt-4">
+      <li class="page-item" [ngClass]="{'disabled': currentPage === 1}" (click)="goToPage(currentPage - 1)">
+        <a class="page-link" aria-label="Previous">&laquo;</a>
+      </li>
+      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [ngClass]="{'active': currentPage === i + 1}" (click)="goToPage(i + 1)">
+        <a class="page-link">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': currentPage === totalPages}" (click)="goToPage(currentPage + 1)">
+        <a class="page-link" aria-label="Next">&raquo;</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
 <ng-template #modalContent let-modal>
   <div class="modal-header">
     <h5 class="modal-title"><i class="fas fa-users"></i> Current Users</h5>
-    
   </div>
   <div class="modal-body">
-    <div *ngIf="gatepasses.length > 0 else noUsersMessage">
+    <div *ngIf="gatepasses.length > 0; else noUsersMessage">
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
-          
               <th>Email</th>
               <th>Position</th>
               <th>Valid Till</th>
@@ -138,7 +113,6 @@
             <tr *ngFor="let gatepass of gatepasses">
               <td>{{ gatepass.fname }}</td>
               <td>{{ gatepass.lname }}</td>
-            
               <td>{{ gatepass.email }}</td>
               <td>{{ gatepass.position }}</td>
               <td>{{ gatepass.expiryDate | date }}</td>
@@ -148,20 +122,7 @@
       </div>
     </div>
     <ng-template #noUsersMessage>
-      <p>This equipment has not been issued to anyone yet. It's possible that the requests for this equipment are still pending. Please check again later.</p>
+      <p>This equipment has not been issued to anyone yet. It's possible that the requests for this equipment are still pending. Please check again later..</p>
     </ng-template>
   </div>
 </ng-template>
-
-
-
-<app-app-request-confirmation-modal
-  *ngIf="showRequestModal"
-  [equipment]="selectedEquipment"
-  (confirm)="confirmRequest()"
-  [title]="modalTitle" 
-  (cancel)="cancelRequest()"
-  (close)="changep()"
-  >
-</app-app-request-confirmation-modal>
-

@@ -1,107 +1,117 @@
-<div class="container py-5">
-    <div class="row justify-content-center main-content">
-      <div class="col-lg-8">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h2 class="card-title text-center mb-4"><i class="fas fa-plus-square"></i> Add Inventory</h2>
+<div class="container py-1">
+  <div class="row justify-content-center main-content">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4"><i class="fas fa-plus-square"></i> Add Inventory</h2>
+
+          <!-- Ask for user's choice -->
+          <div *ngIf="!uploadChoice">
+            <h4 class="text-center">How would you like to add inventory?</h4>
+            <div class="d-flex justify-content-center">
+              <button class="btn btn-primary me-2" (click)="onChoiceSelection('excel')">Upload from Excel</button>
+              <button class="btn btn-primary" (click)="onChoiceSelection('form')">Upload from Form</button>
+            </div>
+          </div>
+
+          <!-- Excel upload form -->
+          <div *ngIf="uploadChoice === 'excel'">
+            <h4 class="text-center mb-4">Upload from Excel</h4>
+            <div class="mb-3">
+              <label for="excelFile" class="form-label"><i class="fas fa-file-excel"></i> Import from Excel</label>
+              <input type="file" class="form-control" id="excelFile" (change)="onFileChange($event)" accept=".xlsx, .xls">
+            </div>
+          </div>
+
+          <!-- Manual form -->
+          <div *ngIf="uploadChoice === 'form'">
             <form [formGroup]="inventoryForm" (ngSubmit)="onSubmit()">
-  
-              <!-- Specification ID Field -->
-              <div class="mb-3">
-                <label for="specId" class="form-label"><i class="fas fa-id-badge"></i> Specification ID</label>
-                <input type="text" class="form-control" id="specId" formControlName="specId">
-                <div *ngIf="inventoryForm.get('specId')?.invalid && inventoryForm.get('specId')?.touched" class="alert alert-danger">
-                  Specification ID is required.
-                </div>
-              </div>
-            
-              <!-- Equipment ID Field -->
-              <div class="mb-3">
-                <label for="equipmentId" class="form-label"><i class="fas fa-barcode"></i> Equipment ID</label>
-                <input type="text" class="form-control" id="equipmentId" formControlName="equipmentId">
-                <div *ngIf="inventoryForm.get('equipmentId')?.invalid && inventoryForm.get('equipmentId')?.touched" class="alert alert-danger">
-                  Equipment ID is required.
-                </div>
-              </div>
-            
-              <!-- Brand Selection -->
-              <div class="mb-3">
-                <label for="brand" class="form-label"><i class="fas fa-tags"></i> Brand</label>
-                <select class="form-select" id="brand" formControlName="brand" (change)="onBrandChange($event)">
-                  <option value="" disabled selected>Select your brand</option>
-                  <option *ngFor="let brand of brands" [value]="brand">{{ brand }}</option>
-                  <option value="Custom">Can't find the brand? Add it here!</option>
+              <!-- Form fields for inventory data -->
+              <div class="mb-3" *ngFor="let field of formFields">
+                <label [for]="field.id" class="form-label"><i [ngClass]="field.icon"></i> {{ field.label }}</label>
+                <input *ngIf="field.type === 'input'" type="text" class="form-control" [id]="field.id" [formControlName]="field.controlName">
+                <select *ngIf="field.type === 'select'" class="form-select" [id]="field.id" [formControlName]="field.controlName" (change)="field.changeEvent && field.changeEvent($event)">
+                  <option value="" disabled selected>{{ field.placeholder }}</option>
+                  <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
                 </select>
-                <div *ngIf="inventoryForm.get('brand')?.invalid && inventoryForm.get('brand')?.touched" class="alert alert-danger">
-                  Brand is required.
+                <textarea *ngIf="field.type === 'textarea'" class="form-control" [id]="field.id" [formControlName]="field.controlName"></textarea>
+                <div *ngIf="inventoryForm.get(field.controlName)?.invalid && inventoryForm.get(field.controlName)?.touched" class="alert alert-danger">
+                  {{ field.error }}
                 </div>
               </div>
-            
-              <!-- Type Selection -->
-              <div class="mb-3">
-                <label for="type" class="form-label"><i class="fas fa-shapes"></i> Type</label>
-                <select class="form-select" id="type" formControlName="type" (change)="onTypeChange($event)">
-                  <option value="" disabled selected>Select your type</option>
-                  <option *ngFor="let type of types" [value]="type">{{ type }}</option>
-                  <option value="Custom">Can't find your type? Add it here!</option>
-                </select>
-                <div *ngIf="inventoryForm.get('type')?.invalid && inventoryForm.get('type')?.touched" class="alert alert-danger">
-                  Type is required.
-                </div>
-              </div>
-            
-              <!-- Description Field -->
-              <div class="mb-3">
-                <label for="description" class="form-label"><i class="fas fa-align-left"></i> Description</label>
-                <textarea class="form-control" id="description" formControlName="description"></textarea>
-              </div>
-            
-              <!-- Location Field -->
-              <div class="mb-3">
-                <label for="location" class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
-                <input type="text" class="form-control" id="location" formControlName="location">
-                <div *ngIf="inventoryForm.get('location')?.invalid && inventoryForm.get('location')?.touched" class="alert alert-danger">
-                  Location is required.
-                </div>
-              </div>
-            
-              <!-- Submit Button -->
               <button type="submit" class="btn btn-primary w-100 mt-3" [disabled]="inventoryForm.invalid">
                 <i class="fas fa-paper-plane"></i> Submit
               </button>
-            </form>       
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
-  <!-- Bootstrap Modal for Custom Brand -->
-  <ng-template #customBrandModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Add Custom Brand</h4>
-      
+</div>
+
+<!-- Custom Brand Modal -->
+<ng-template #customBrandModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Add Custom Brand</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="customBrand" class="form-label">Custom Brand</label>
+      <input type="text" class="form-control" id="customBrand" #customBrandInput>
     </div>
-    <div class="modal-body">
-      <input type="text" class="form-control" placeholder="Enter custom brand" #customBrandInput>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addCustomBrand(customBrandInput.value)">Add Brand</button>
+  </div>
+</ng-template>
+
+<!-- Custom Type Modal -->
+<ng-template #customTypeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Add Custom Type</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label for="customType" class="form-label">Custom Type</label>
+      <input type="text" class="form-control" id="customType" #customTypeInput>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
-      <button type="button" class="btn btn-primary" (click)="addCustomBrand(customBrandInput.value)">Save changes</button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addCustomType(customTypeInput.value)">Add Type</button>
+  </div>
+</ng-template>
+
+<!-- Excel Data Modal -->
+<!-- Excel Data Modal -->
+<ng-template #excelDataModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm Excel Data</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to add the following data?</p>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th *ngFor="let field of formFields">{{ field.label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of excelData">
+            <td *ngFor="let field of formFields">{{ item[field.id] }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </ng-template>
-  
-  <!-- on type change -->
-  <ng-template #customTypeModal let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">Add Custom Type</h4>
-    </div>
-    <div class="modal-body">
-      <input type="text" class="form-control" placeholder="Enter custom type" #customTypeInput>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
-      <button type="button" class="btn btn-primary" (click)="addCustomType(customTypeInput.value)">Save changes</button>
-    </div>
-  </ng-template>
-  
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="onConfirm()">Confirm</button>
+  </div>
+</ng-template>

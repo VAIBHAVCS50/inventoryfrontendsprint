@@ -1,13 +1,20 @@
 export interface RequestWithUserDetailsDTO {
-  userId: string;
   requestId: string;
-  equipmentId: string;
   userName: string;
   userEmail: string;
   userRole: string;
-  requestLocation: Location;
   requestDate: Date;
+  equipments: EquipmentDetailsDTO[];
+  status:string;
+}
+
+export interface EquipmentDetailsDTO {
+  serialNumber: string;
   brand: string;
   type: string;
   specificationId: string;
+  status: string;
+  location: string;
+
+
 }

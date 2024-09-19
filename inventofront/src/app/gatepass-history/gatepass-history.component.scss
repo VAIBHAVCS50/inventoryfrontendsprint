@@ -1,0 +1,43 @@
+.gatepass-row {
+  background-color: #f8f9fa;
+}
+
+.equipment-row {
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+}
+
+.table-bordered > :not(:first-child) > tr > td {
+  border-top: 0;
+}
+
+thead.thead-custom {
+  background-color: #11387F;
+  color: white;
+}
+
+thead.thead-custom th {
+  text-align: center;
+}
+
+.table-responsive {
+  margin-bottom: 20px;
+}
+
+.no-data {
+  margin-top: 20px;
+}
+
+.equipment-header {
+  background-color: #e9ecef;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

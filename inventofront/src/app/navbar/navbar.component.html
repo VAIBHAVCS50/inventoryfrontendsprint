@@ -1,3 +1,5 @@
+<!-- navbar.component.html -->
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
@@ -8,59 +10,119 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Main Navigation -->
         <li class="nav-item">
-          <a class="nav-link active" routerLink="welcome" aria-current="page" ><i class="fas fa-home"></i> Home</a>
+          <a class="nav-link active" routerLink="welcome" aria-current="page"><i class="fas fa-home"></i> Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="about"><i class="fas fa-info-circle"></i> About Us</a>
-        </li>
-        <li class="nav-item" *ngIf="role=='admin'">
-          <a class="nav-link"  routerLink="add-equipment"><i class="fas fa-plus-circle"></i> Add New Equipment</a>
-        </li>
-        <li class="nav-item" *ngIf="role=='admin'">
-          <a class="nav-link"  routerLink="users"><i class="fa-solid fa-user"></i> View Users</a>
-        </li>
-        <li class="nav-item" *ngIf="loginDisplay">
-          <a class="nav-link" routerLink="profile" ><i class="fas fa-user"></i> My Info</a>
-        </li>
-        <li class="nav-item dropdown" *ngIf="loginDisplay">
-          <a class="nav-link dropdown-toggle"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-cogs"></i> Request
+
+        <!-- Admin Actions -->
+        <li  class="nav-item dropdown" *ngIf="role=='admin'">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-pencil"></i> Admin Actions
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item"  routerLink="requeststatus">View Requests</a></li>
-            <li><a class="dropdown-item"  routerLink="viewequipments">Request Equipment</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" >Equipment Not Found</a></li>
+          <ul style="z-index: 10000;" class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" routerLink="add-equipment">
+                <i class="fas fa-plus-circle"></i> Add New Equipment
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="users">
+                <i class="fas fa-users"></i> View Users
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/requesthistory', prefix, 'issued-gatepass']" [queryParams]="{ from: 'approve-submit-equipment' }">
+                <i class="fas fa-clipboard-check"></i> Submission Requests
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="manager-role">
+                <i class="fas fa-user-cog"></i> Manage Roles
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="self-life">
+                <i class="fas fa-hourglass-half"></i> Shelf Life
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+          
+            <li>
+              <div class="px-3 py-2">
+                <app-setting></app-setting>
+              </div>
+            </li>
           </ul>
         </li>
+
+        <!-- User Actions -->
+        <li class="nav-item" *ngIf="loginDisplay">
+          <a class="nav-link" routerLink="profile"><i class="fas fa-user"></i> My Equipments</a>
+        </li>
+        <!-- <li class="nav-item" *ngIf="role=='employee'">
+          <a class="nav-link" [routerLink]="['/requesthistory', prefix,'issued-gatepass']" [queryParams]="{ from: 'submit-equipment' }"><i class="fas fa-user"></i> Submit Equipment</a>
+        </li> -->
+        <li class="nav-item" *ngIf="loginDisplay">
+          <a class="nav-link" routerLink="profile" routerLink="viewequipments"><i class="fas fa-cogs"></i>Request Equipment</a>
+        </li>
+
+        <li class="nav-item" *ngIf="loginDisplay&&(role=='admin'||role=='manager')" >
+          <a class="nav-link"  routerLink="requeststatus">
+            <i class="fas fa-thumbs-up"></i> Approve/Reject
+          </a>
+        </li>
+        <!-- Requests -->
+        <!-- <li class="nav-item dropdown" *ngIf="loginDisplay">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-cogs"></i> Request Equipment
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="requeststatus">View Requests</a></li>
+            <li><a class="dropdown-item" routerLink="viewequipments">Request Equipment</a></li>
+          </ul>
+        </li> -->
       </ul>
-      <form class="d-flex">
-        <button class="btn btn-outline-success me-2" type="submit" *ngIf="!loginDisplay" (click)="login()">Login</button>
-        <button class="btn btn-outline-danger" type="submit" *ngIf="loginDisplay" (click)="logout()">Logout</button>
-      </form>
-      <!-- <div *ngIf="photoloaded" class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <img [src]="profilePhotoUrl" alt="Profile" class="profile-photo rounded-circle me-2" width="30" height="30">
-          My Profile
+
+      <form class="d-flex align-items-center position-relative">
+        <!-- Login Authentication Component -->
+        <app-loginauthentication *ngIf="!loginDisplay" class="me-2"></app-loginauthentication>
+      
+        <!-- Cart Button -->
+        <a *ngIf="cartItemsCount && loginDisplay" class="btn btn-outline-primary position-relative cart-btn" (click)="toggleSidebar()">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+            {{ cartItemsCount }}
+            <span class="visually-hidden">items in cart</span>
+          </span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-          <li>
-            <div class="card">
-              <img [src]="profilePhotoUrl" alt="Profile" class="card-img-top rounded-circle mx-auto mt-3" style="width: 80px; height: 80px;">
-              <div class="card-body text-center">
-                <h5 class="card-title">{{ vab.givenName }} {{ vab.surname }}</h5>
-                <p class="card-text">{{ vab.jobTitle }}</p>
-                <button class="btn btn-danger" (click)="logout()">Logout</button>
-              </div>
+      </form>
+
+      <!-- Profile Photo and Dropdown -->
+      <div style="z-index: 1030;" class="nav-item dropdown ms-3" *ngIf="loginDisplay&&vab">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img [src]="profilePhotoUrl || 'https://img.icons8.com/?size=256&id=JDRZ6b6kMnHx&format=png'" alt="Profile Picture" class="rounded-circle" width="40" height="40">
+        </a>
+        <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="navbarDropdown">
+          <div class="d-flex align-items-center mb-3">
+            <img [src]="profilePhotoUrl || 'https://img.icons8.com/?size=256&id=JDRZ6b6kMnHx&format=png'" alt="Profile Picture" class="rounded-circle me-3" width="65" height="65">
+            <div>
+              <h4 class="mb-0">{{ vab.givenName }} {{ vab.surname }}</h4>
+              <hr>
+              <p class="text-muted mb-1"><i class="fas fa-briefcase me-2"></i>{{ vab.jobTitle }}</p>
+              <p class="text-muted mb-1"><i class="fas fa-envelope me-2"></i>{{ vab.userPrincipalName }}</p>
+              <p class="text-muted mb-1"><i class="fas fa-envelope me-2"></i>{{ vab.id }}</p>
             </div>
-          </li>
-        </ul>
-      </div> -->
+          </div>
+          <div class="dropdown-divider"></div>
+          <app-loginauthentication *ngIf="loginDisplay"></app-loginauthentication>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
-
 <!-- Profile Card Template -->
 <!-- <ng-template #profileContent>
   <div class="profile-card mb-4">
@@ -79,6 +141,10 @@
     <i class="bi bi-person-circle"></i>
   </div>
 </ng-template> -->
+
+<ng-template #sidebarContent>
+  <app-cart></app-cart>
+</ng-template>
 
 <router-outlet></router-outlet>
 

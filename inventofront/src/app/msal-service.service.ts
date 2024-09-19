@@ -10,12 +10,14 @@ export class MsalServiceService {
   private msalInstance: PublicClientApplication;
 
   constructor() {
+    const baseUri = window.location.origin; // This gets the base URL of the current window
+
     this.msalInstance = new PublicClientApplication({
       auth: {
         clientId: "40dd6f87-4874-44bb-bb40-34cbe1a70f01", // Application (client) ID from the app registration
         authority:
           "https://login.microsoftonline.com/ed5d5f47-52dd-48af-90ca-f7bd83624eb9", // The Azure cloud instance and the app's sign-in audience (tenant ID, common, organizations, or consumers)
-        redirectUri: "https://localhost:4200", // This is your redirect URI
+        redirectUri: baseUri, // This is your redirect URI
       },
       cache: {
         cacheLocation: 'localStorage',

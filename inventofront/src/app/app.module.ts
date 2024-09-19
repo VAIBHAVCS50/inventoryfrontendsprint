@@ -1,3 +1,4 @@
+import { NgxPaginationModule } from 'ngx-pagination';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -18,7 +19,7 @@ import { AboutusComponent } from './aboutus/aboutus.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { AppRequestConfirmationModalComponent } from './app-request-confirmation-modal/app-request-confirmation-modal.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { RequeststatusComponent } from './requeststatus/requeststatus.component';
 import { AddinventoryComponent } from './addinventory/addinventory.component';
 import { FooterComponent } from './footer/footer.component';
@@ -32,6 +33,24 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { AuserdetailsComponent } from './auserdetails/auserdetails.component';
 import { GatepassComponent } from './gatepass/gatepass.component';
+import { EquipmentComponent } from './equipment/equipment.component';
+import { CartComponent } from './cart/cart.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RequestHistoryComponent } from './request-history/request-history.component';
+import { GatepassHistoryComponent } from './gatepass-history/gatepass-history.component';
+import { LoaderComponent } from './loader/loader.component';
+import { SelflifeComponent } from './selflife/selflife.component';
+import { SettingsComponent } from './settings/settings.component';
+import { ManageRolesComponent } from './manage-roles/manage-roles.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { EquipmentsInPossessionComponent } from './equipments-in-possession/equipments-in-possession.component';
+import { LoginauthenticationComponent } from './loginauthentication/loginauthentication.component';
+import { OfficeSelectorComponentComponent } from './office-selector-component/office-selector-component.component';
+
 
 
 
@@ -51,7 +70,18 @@ const msalService = new MsalServiceService();
     WelcomepageComponent,
     AusersComponent,
     AuserdetailsComponent,
-    GatepassComponent
+    GatepassComponent,
+    EquipmentComponent,
+    CartComponent,
+    RequestHistoryComponent,
+    GatepassHistoryComponent,
+    LoaderComponent,
+    SelflifeComponent,
+    SettingsComponent,
+    ManageRolesComponent,
+    EquipmentsInPossessionComponent,
+    LoginauthenticationComponent,
+    OfficeSelectorComponentComponent
   ],
   imports: [
     MsalModule.forRoot(
@@ -75,7 +105,14 @@ const msalService = new MsalServiceService();
     AppRoutingModule,
     MsalModule,
     NgbModule,
+    MatDialogModule,
+    MatTabsModule,
+    NgbModule,
+    NgxPaginationModule,
     ReactiveFormsModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
     MatTableModule,
     MatIconModule ,
     MatCardModule,

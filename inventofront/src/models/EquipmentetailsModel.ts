@@ -3,7 +3,7 @@ export interface CategoryDetails {
     categoryName: string;
     quantity: number;
     brand: string;
-    pdf: string;
     requestedQuantity: number;
+    description:string;
   }
   

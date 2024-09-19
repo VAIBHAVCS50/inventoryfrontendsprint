@@ -1,97 +1,132 @@
+/* Banner Styles */
 .banner {
-    margin-top: 100px;
-    margin-bottom: 120px;
-    position: relative;
-  }
-  
-  .banner-content {
-    position: relative;
-    z-index: 1; /* Ensure banner content is above navbar */
-  }
-  
-  .banner img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .banner-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #f6f7f8; /* Updated text color */
-  
-    padding: 20px; /* Add padding around the message */
-   
-  }
-  
-  /* Icon Section Styles */
-  .icon-section {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 50px;
-  }
-  
-  .icon {
-    text-align: center;
-    color: #11387F; /* Updated icon color */
-  }
-  
-  .icon i {
-    font-size: 2rem;
-  }
-  
-  /* Explanation Section Styles */
+  margin-bottom: 120px;
+  position: relative;
+}
 
-  /* Additional Styles */
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px; /* Add margin below the heading */
-  }
-  
-  p {
-    margin-bottom: 0; /* Remove margin below the paragraph */
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
+.banner-content {
+  position: relative;
+  z-index: 1; /* Ensure banner content is above navbar */
+}
 
+.banner img {
+  width: 100%;
+  height: auto;
+}
 
-/* Explanation Section Styles */
+.banner-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #f6f7f8; /* Updated text color */
+  padding: 20px; /* Add padding around the message */
+  
+  border-radius: 10px; /* Rounded corners */
+}
+
+/* Icon Section Styles */
+.icon-section {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 20px; /* Add space between items */
+}
+
+.icon {
+  text-align: center;
+  color: #11387F; /* Updated icon color */
+  flex: 1 1 200px; /* Responsive flex basis */
+  margin: 20px; /* Margin around each icon box */
+  padding: 20px;
+  border: 1px solid #ddd; /* Add border */
+  border-radius: 10px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.icon:hover {
+  transform: translateY(-10px); /* Lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+}
+
+.icon i {
+  font-size: 2rem;
+  margin-bottom: 10px; /* Spacing between icon and text */
+}
+
 /* Explanation Section Styles */
 .explanation {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 100px;
-  }
-  
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.explanation-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Align items vertically centered */
+  width: 80%; /* Adjust as needed */
+  margin-bottom: 100px; /* Adjust spacing between sections */
+  padding: 20px; /* Padding around content */
+  border: 1px solid #ddd; /* Border for separation */
+  border-radius: 10px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color */
+}
+
+.explanation-text {
+  width: 45%; /* Adjust as needed */
+}
+
+.explanation-image {
+  width: 45%; /* Adjust as needed */
+}
+
+.explanation-image img {
+  max-width: 100%;
+  max-height: 200px; /* Set maximum height for images */
+  height: auto;
+  border-radius: 10px; /* Rounded corners for images */
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Additional Styles */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px; /* Add margin below the heading */
+}
+
+p {
+  margin-bottom: 0; /* Remove margin below the paragraph */
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px; /* Add margin above h2 elements */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
   .explanation-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Align items vertically centered */
-    width: 80%; /* Adjust as needed */
-    margin-bottom: 100px; /* Adjust spacing between sections */
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start */
   }
-  
-  .explanation-text {
-    width: 45%; /* Adjust as needed */
+
+  .explanation-text, .explanation-image {
+    width: 100%; /* Full width on smaller screens */
+    text-align: center; /* Center text */
   }
-  
-  .explanation-image {
-    width: 45%; /* Adjust as needed */
-  }
-  
+
   .explanation-image img {
-    max-width: 100%;
-    max-height: 200px; /* Set maximum height for images */
-    height: auto;
+    max-height: none; /* Remove height constraint */
+    margin-top: 20px; /* Add margin above images */
   }
-  
-  .reverse {
-    flex-direction: row-reverse;
-  }
+}

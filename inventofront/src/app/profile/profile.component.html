@@ -1,15 +1,19 @@
-<div class="bodd profile-container">
-  <div class="profile-header">
-    <div class="profile-avatar">
-      <img [src]="profilePhotoUrl" alt="Profile Picture">
-    </div>
-    <div class="profile-details">
-      <h2>{{ profile.givenName }} {{ profile.surname }}</h2>
-      <p class="job-title"><i class="fas fa-briefcase"></i> {{ profile.jobTitle }}</p>
-      <p class="user-email"><i class="fas fa-envelope"></i> {{ profile.userPrincipalName }}</p>
-    </div>
+
+
+
+  <!-- Tabs Section -->
+  <div class="tabs-container shadow-sm rounded bg-white p-3">
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="My Requests">
+        <app-requeststatus 
+        [powerrole]="'employee'"
+        ></app-requeststatus>
+      </mat-tab>
+      <mat-tab label="Equipments in my possession">
+        <ng-container *ngIf="!showEquipmentsInPossession">
+          <router-outlet></router-outlet>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
   </div>
-  <div class="profile-body">
-    <p class="profile-id">User ID: {{ profile.id }}</p>
-  </div>
-</div>
+  

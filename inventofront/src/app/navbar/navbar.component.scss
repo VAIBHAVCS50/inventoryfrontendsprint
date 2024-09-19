@@ -1,84 +1,74 @@
 /* Custom CSS styles for rounded buttons and profile photo */
-button.rounded-circle {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+.navbar-nav .nav-item .nav-link {
+  margin-right: 10px;
+}
+.dropdown-menu {
+  width: 400px;
+}
+.dropdown-menu .d-flex img {
+  border: 2px solid #ddd;
+}
+.dropdown-menu h4 {
+  font-weight: bold;
+}
+.dropdown-menu .btn {
+  margin-top: 10px;
+}
+.btn-outline-primary {
+  display: flex;
+  align-items: center;
+}
+.btn-outline-primary .fas.fa-shopping-cart {
+  margin-right: 5px;
+}
+.nav-item.dropdown.ms-3 {
+  margin-left: 15px;
+}
+.form.d-flex.align-items-center .btn {
+  margin-right: 10px;
+}
+
+.d-flex.align-items-center {
+  gap: 10px; /* Adds spacing between elements */
+}
+
+.cart-btn {
+  position: relative;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #133170;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.cart-btn:hover {
+
+
+}
+
+.cart-btn i {
+  font-size: 1.0rem;
+}
+
+.cart-badge {
+  top: -10px;
+  start: 80%;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  transform: translate(-50%, -50%);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Custom CSS styles for profile photo inside the button */
-button.rounded-circle img {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.navbar-nav {
-  display: flex;
-  align-items: center;
-}
-
-.nav-item {
-  margin-right: 8px;
-  display: flex;
-  align-items: center;
-}
-
-/* Component-specific CSS styles */
-.navbar {
-  position: fixed; /* Fixed positioning */
-  top: 0; /* Align to the top */
-  right: 0; /* Align to the right */
-  left: 0; /* Align to the left */
-  z-index: 1030; /* Ensures the navbar is above other content */
-}
-body {
-  padding-top: 56px; /* Adjust this value based on the actual height of your navbar */
-}
-
-.profile-photo, .default-icon-wrapper {
-  width: 40px; /* Adjust the size as needed */
-  height: 40px; /* Adjust the size as needed */
-  border-radius: 50%; /* Makes it circular */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Style for the default profile icon when the user image is not available */
-.default-icon-wrapper {
-  background-color: #f0f0f0; /* Light grey background, you can change it as needed */
-  font-size: 1.5rem; /* Adjust the size of the icon as needed */
-  color: #ffffff; /* White color for the icon */
-}
-
-.bi-person-circle {
-  font-size: 2rem;
-  color: #ffffff;
- 
-}
-
-.profile-card {
-  width: auto; /* Adjust the width as needed, or use 'auto' for natural width */
-  max-width: 500px; /* Set a max-width to prevent it from getting too wide */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add some shadow for depth */
-  border-radius: 0.5rem; /* Round the corners for a softer look */
-  overflow: hidden; /* Ensure the content does not overflow */
-  background: #fff; /* Set a background color */
-  padding: 1.5rem; /* Add more padding for a thicker look */
-  margin-top: 0.5rem; /* Add some space above the card */
-  border: 1px solid #ddd; /* Add a subtle border */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .profile-card {
-    max-width: 100%; /* Full width on smaller screens */
-    padding: 1rem; /* Adjust padding on smaller screens */
-    margin-top: 0.25rem; /* Adjust space above the card on smaller screens */
-  }
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

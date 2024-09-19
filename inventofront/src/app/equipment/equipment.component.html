@@ -1,0 +1,40 @@
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Brand</th>
+        <th scope="col">Spec ID</th>
+        <th scope="col">Description</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipment of equipments | slice:(currentPage-1)*pageSize:currentPage*pageSize">
+        <td>{{ equipment.categoryName }}</td>
+        <td>{{ equipment.brand }}</td>
+        <td>{{ equipment.categoryId }}</td>
+        <td>{{ equipment.description }}</td>
+        <td>
+          <span class="badge" [ngClass]="{'bg-success': equipment.quantity > 0, 'bg-danger': equipment.quantity < 1}">
+            {{ equipment.quantity }}
+          </span>
+        </td>
+        <td>
+          <button 
+            [disabled]="equipment.quantity < 1" 
+            class="btn btn-outline-primary btn-sm me-2" 
+            (click)="onAddToCart(equipment)">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+          <button 
+            class="btn btn-outline-secondary btn-sm" 
+            (click)="onOpenModal(equipment)">
+            <i class="fas fa-users"></i> Show Users
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

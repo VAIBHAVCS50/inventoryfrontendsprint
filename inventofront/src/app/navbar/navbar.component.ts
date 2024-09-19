@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Inject, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Inject, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { IsloggedinService } from '../isloggedin.service';
 import { UserdetailsService } from '../fetchuser/userdetails.service';
 import { Subject, filter, takeUntil } from 'rxjs';
@@ -9,6 +9,8 @@ import { MsalServiceService } from '../msal-service.service';
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, InteractionType, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CartserviceService } from '../cartservice.service';
+import { CartComponent } from '../cart/cart.component';
 
 
 @Component({
@@ -17,54 +19,54 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-
-  
   showDetails: boolean = false;
-
-  toggleDropdown(): void {
-    this.showDetails = !this.showDetails;
-  }
-
-
-
   showDropdown: boolean = false;
-
-  getProfilePhotoUrl(photoBlob: Blob): string {
-    if (photoBlob) {
-      return URL.createObjectURL(photoBlob);
-    }
-    return '';
-  }
-
-  loginDisplay = false;
+  loginDisplay: boolean = false;
   profilePhotoBlob!: Blob;
-
-  isIframe = true;
-
+  cartItemsCount: number = 0;
+  isIframe: boolean = true;
+  role: string = "employee";
+  photoloaded: boolean = false;
+  profile!: Profilee;
+  vab!: sad;
+  profilePhotoUrl!: SafeUrl;
+  prefix: string = '';
   private readonly _destroying$ = new Subject<void>();
-  @ViewChild('childTemplate', { read: ViewContainerRef }) childTemplate!: ViewContainerRef;
 
-  constructor( private sanitizer: DomSanitizer,private asd:UserdetailsService,private router: Router,private islogd:IsloggedinService,private registeruser:UserdetailsService,private authService: MsalService, private broadcastService: MsalBroadcastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,private  msalService: MsalServiceService)
-  {
+  // @ViewChild('childTemplate', { read: ViewContainerRef }) childTemplate!: ViewContainerRef;
+  // @ViewChild('sidebarContent', { static: true }) sidebarContent!: TemplateRef<any> ;
 
-    
+  constructor(
+    private cartSidebar: CartserviceService,
+    private getservice: UserdetailsService,
+    private cartService: CartserviceService,
+    private sanitizer: DomSanitizer,
+    private userService: UserdetailsService,
+    private router: Router,
+    private islogd: IsloggedinService,
+    private registeruser: UserdetailsService,
+    private authService: MsalService,
+    private broadcastService: MsalBroadcastService,
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    private msalService: MsalServiceService
+  ) {}
+
+  toggleSidebar() {
+    this.cartSidebar.openSidebar();
   }
+
 
   ngOnInit(): void {
+    this.initializeLoginDisplay();
+    this.setupCartSubscription();
+    this.checkFunctionality();
 
-    
-  //   this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
-  // else{
-  //   console.log("i really need this incivisiblity");
-  // }
- 
-  this.checkfunctionality();
     this.broadcastService.msalSubject$
-    .pipe(
-      filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
-    )
+    .pipe(filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS))
     .subscribe((result: EventMessage) => {
       console.log(result);
+      this.updateLoginDisplay();
+      this.fetchAndStoreUserProfile();
     });
 
 
@@ -74,165 +76,163 @@ export class NavbarComponent {
       takeUntil(this._destroying$)
     )
     .subscribe(() => {
-      this.setLoginDisplay();
-      this.saveProfile();
-      this.checkfunctionality();
-     
-    
-    })
-    
-   
-
-
+      this.updateLoginDisplay();
+      this.fetchAndStoreUserProfile();
+      this.checkFunctionality();
+      this.getphoto();
+    });
   }
 
-  
-  role:string="employee";
-
-  photoloaded:boolean=false;
-
-  checkfunctionality(){
-    this.getphoto();
-    this.loginDisplay = this.islogd.isLoggedIn();
-    console.log("i am invincible");
-    // this.fetchimage();
-    const key = 'msal.account.keys';
-    const storedData = localStorage.getItem(key);
-
-    
-    if(storedData){
-      // Extracting the data between the square brackets
-  const startIndex = storedData.indexOf('["') + 2; // Adding 2 to skip the opening square bracket and quote
-  const endIndex = storedData.indexOf('"', startIndex); // Finding the index of the closing quote
-  const dataWithoutBrackets = storedData.substring(startIndex, endIndex); // Extracting the data between the quotes
-  const parts = dataWithoutBrackets.split('.');
-
-  if (parts.length > 1) {
-    const prefix = parts[0];
-    console.log(prefix);
-    this.asd.getUserRole(prefix).subscribe(
-      (role) => {
-        this.role = role.role;
-        console.log("my roleeeeee");
-        console.log("role", role);
-      },
-    );
+  ngOnDestroy(): void {
+    this._destroying$.next(undefined);
+    this._destroying$.complete();
   }
+
+  toggleDropdown(): void {
+    this.showDetails = !this.showDetails;
   }
-  else{
-    this.role="employee";
+
+  private initializeLoginDisplay(): void {
+    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+
+    if (this.islogd.isLoggedIn()) {
+      this.fetchAndStoreUserProfile();
+      this.getphoto();
+    }
   }
-  }
-  login() {
-    if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
-      if (this.msalGuardConfig.authRequest) {
-        this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
-          .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
-          });
-        } else {
-          this.authService.loginPopup()
-            .subscribe((response: AuthenticationResult) => {
-              this.authService.instance.setActiveAccount(response.account);
-            });
-      }
+
+  private fetchAndStoreUserProfile(): void {
+    const storedProfile = localStorage.getItem('profile');
+    if (storedProfile) {
+      this.profile = JSON.parse(storedProfile);
+      this.setUserDetails(this.profile);
+      this.checkFunctionality(); // Ensure role is checked after profile is set
+
     } else {
-      if (this.msalGuardConfig.authRequest) {
-        this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
-      } else {
-        this.authService.loginRedirect();
-      }
+      this.registeruser.getuser().subscribe(
+        (data) => {
+          console.log(data);
+          this.profile = data;
+          localStorage.setItem('profile', JSON.stringify(data));
+          this.setUserDetails(this.profile);
+                    this.checkFunctionality(); // Ensure role is checked after profile is set
+                   
+
+        },
+        (error) => console.log(error)
+      );
     }
   }
-  
-  
-  
-  logout() {
-    this.authService.logoutPopup().subscribe({
-      next: () => {
-        
-        this.islogd.notifyAuthenticationStatusChange();
-        this.router.navigate(['/']); 
-      },
-      error: (error) => {
-       
-        console.error('Logout failed', error);
-      }
-    });
-  }
-setLoginDisplay() {
-   this.islogd.notifyAuthenticationStatusChange();
-  this.loginDisplay = this.islogd.isLoggedIn();
-  console.log(this.loginDisplay);
-}
 
-ngOnDestroy(): void {
-  this._destroying$.next(undefined);
-  this._destroying$.complete();
-}
- profile!: Profilee;
- vab!: sad; 
-
- saveProfile() {
- 
-  this.registeruser.getuser().subscribe((data) => {
-    console.log(data);
-    this.profile = data;
-    
-
+  private setUserDetails(profile: any): void {
     this.vab = {
-      givenName: this.profile.givenName,
-      surname: this.profile.surname,
-      userPrincipalName: this.profile.userPrincipalName,
-      id: this.profile.id,
-      jobTitle:this.profile.jobTitle
-      
+      givenName: profile.givenName,
+      surname: profile.surname,
+      userPrincipalName: profile.userPrincipalName,
+      id: profile.id,
+      jobTitle: profile.jobTitle
     };
-    this.photoloaded=true;
-    
-    console.log(this.vab);
+    this.photoloaded = true;
+  }
 
-    
-    this.registeruser.insertProfile(this.vab).subscribe({
-      next: (v) => {console.log(v);
-       
-      },
-      error: (e) => console.error(e)
+
+  private setupCartSubscription(): void {
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItemsCount = items.reduce((acc, item) => acc + item.requestedQuantity, 0);
     });
-  });
-}
+  }
 
+  private updateLoginDisplay(): void {
+    this.islogd.notifyAuthenticationStatusChange();
+    this.loginDisplay = this.islogd.isLoggedIn();
+  }
 
-profilePhotoUrl!: SafeUrl;
-
-getphoto() {
-  console.log("I entered inside fetchimage");
-  this.asd.getuserProfilePhoto().subscribe({
-    next: (photoBlob: Blob) => {
-      this.profilePhotoBlob = photoBlob;
-      console.log('Profile photo Blob:', this.profilePhotoBlob);
-      this.convertBlobToBase64();
-      this.photoloaded=true;
-    },
-    error: (e) => {
-      console.error('Error fetching profile photo:', e);
-    },
-    complete: () => {
-      console.log('Fetch image request completed.');
+  private checkFunctionality(): void {
+    this.loginDisplay = this.islogd.isLoggedIn();
+    const storedData = localStorage.getItem('profile');
+    this.saveProfile();
+    if (storedData) {
+      this.prefix = this.profile.id;
+      console.log("yes vaibhav you are correct");
+      this.userService.getUserRole(this.prefix).subscribe(
+        (role) => {
+          this.role = role.role;
+          console.log(role);
+        },
+        (error) => console.log(error)
+      );
     }
-  });
- 
-}
+  }
+
+  saveProfile() {
+    this.registeruser.getuser().subscribe((data) => {
+      console.log(data);
+      this.profile = data;
+
+      this.vab = {
+        givenName: this.profile.givenName,
+        surname: this.profile.surname,
+        userPrincipalName: this.profile.userPrincipalName,
+        id: this.profile.id,
+        jobTitle: this.profile.jobTitle
+      };
+      this.photoloaded = true;
+
+      console.log(this.vab);
+
+      this.registeruser.insertProfile(this.vab).subscribe({
+        next: (v) => { console.log(v); },
+        error: (e) => console.error(e)
+      });
+    });
+    
+  }
+
+  getphoto() {
+    const storedPhoto = localStorage.getItem('profilePhoto');
+    if (storedPhoto) {
+      this.profilePhotoBlob = this.convertBase64ToBlob(storedPhoto);
+      this.profilePhotoUrl = this.sanitizer.bypassSecurityTrustUrl(storedPhoto);
+      console.log('Profile photo loaded from local storage');
+    } else {
+      console.log("I entered inside fetchimage");
+      this.getservice.getuserProfilePhoto().subscribe({
+        next: (photoBlob: Blob) => {
+          this.profilePhotoBlob = photoBlob;
+          console.log('Profile photo Blob:', this.profilePhotoBlob);
+          this.convertBlobToBase64();
+        },
+        error: (e) => {
+          console.error('Error fetching profile photo:', e);
+        },
+        complete: () => {
+          console.log('Fetch image request completed.');
+        }
+      });
+    }
+  }
 
 convertBlobToBase64() {
   const reader = new FileReader();
   reader.readAsDataURL(this.profilePhotoBlob);
   reader.onloadend = () => {
-    this.profilePhotoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+    const base64data = reader.result as string;
+    localStorage.setItem('profilePhoto', base64data);
+    this.profilePhotoUrl = this.sanitizer.bypassSecurityTrustUrl(base64data);
+    console.log('Profile photo stored in local storage:', base64data);
   };
 }
-}
 
+convertBase64ToBlob(base64: string): Blob {
+  const byteString = atob(base64.split(',')[1]);
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: 'image/jpeg' }); // Adjust the MIME type if necessary
+}
+}
 
 
 

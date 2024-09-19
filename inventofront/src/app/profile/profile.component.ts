@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { UserdetailsService } from '../fetchuser/userdetails.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -12,11 +13,13 @@ export class ProfileComponent implements OnInit {
   profile!: Profilee;
   profilePhotoBlob!: Blob;
   profilePhotoUrl!: SafeUrl;
+  showEquipmentsInPossession: boolean = false;
 
   constructor(
     private http: HttpClient,
     private getservice: UserdetailsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -27,11 +30,25 @@ export class ProfileComponent implements OnInit {
   getProfile() {
     this.getservice.getuser()
       .subscribe(profile => {
+        console.log("hiiiiiiiiiiii");
         this.profile = profile;
         console.log(this.profile);
       });
   }
+  onTabChange(event: any) {
+    if (event.index === 1) {
+      // Assuming 1 is the index of the "Equipments in Possession" tab
+      this.router.navigate(['profile/requesthistory', this.profile.id, 'issued-gatepass'], { queryParams: { from: 'submit-equipment' } });
+      this.showEquipmentsInPossession = false;
+    } else {
+      this.showEquipmentsInPossession = true;
+      
+        console.log(event.index);
   
+    }
+    
+  }
+
   getphoto() {
     console.log("I entered inside fetchimage");
     this.getservice.getuserProfilePhoto().subscribe({

@@ -1,114 +1,130 @@
+<div class="bodd">
 
-<div *ngIf="requestInProgress" class="loader-container">
-  <div class="loader"></div>
-</div>
   <section class="main-content">
- 
-        <div class="container-fluid">
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-11">
-        <div class="card">
-          <h2 class="card-header sticky-header text-center">Request Status</h2>
-          <div class="card-body">
-            <!-- Loader -->
-            <div *ngIf="loading" class="text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+    <div class="container-fluid">
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-11">
+  
+            <!-- <h2 class="card-header sticky-header text-center text-white" style="background-color: rgb(33, 33, 199);">Request Status</h2> -->
+    
+              <!-- Loader -->
+              <div *ngIf="loading" class="loader-container">
+                <app-loader></app-loader>
               </div>
-              <p>Loading equipment data...</p>
-            </div>
-            <!-- Request status table for employee -->
-            <div *ngIf="!loading && role.role === 'employee'">
-              <div *ngIf="requestStatusList.length > 0; else noRequestsMessage">
-                <div class="table-container">
-                  <table class="table">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th>Status</th>
-                        <th>Equipment ID</th>
-                        <th>Brand</th>
-                        <th>Type</th>
-                        <th>Specification ID</th>
-                        <th>Request Date</th>
-                        <th>Actions</th> <!-- Add Actions column -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let requestStatus of requestStatusList"
-                          [ngClass]="getStatusClass(requestStatus.requestStatus)">
-                        <td>{{ requestStatus.requestStatus }}</td>
-                        <td>{{ requestStatus.equipmentId }}</td>
-                        <td>{{ requestStatus.brand }}</td>
-                        <td>{{ requestStatus.type }}</td>
-                        <td>{{ requestStatus.specificationId }}</td>
-                        <td>{{ requestStatus.requestDate|date }}</td>
-            
-                        <td>
-                          <!-- Additional button for showing gatepass -->
-                          <button [routerLink]="['/gatepass', requestStatus.requestId]" *ngIf="requestStatus.requestStatus === 'Approved'" class="btn btn-primary btn-sm">Show Gatepass</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+  
+              <!-- Request status table for employee -->
+               <div *ngIf="!loading">
+                    <div *ngIf="((role?.role === 'employee'&&!loading)||(powerrole==='employee'))">
+                        <app-request-history
+                              [powerrole]="powerrole"
+                              [data]="requestWithUserDetailsList"
+                              [currentPage]="currentPage"
+                              [pageSize]="pageSize"
+                              [pages]="pages">
+                        </app-request-history>
+                    </div>
+               </div>
+              
+  
+              <!-- Request status table for admin -->
+              <section *ngIf="!loading">
+                <div *ngIf="(role?.role === 'admin' || role.role === 'manager')&&(powerrole!=='employee')">
+                  <ng-container *ngIf="paginatedRequestList.length > 0; else noRequestsMessage">
+                    <div class="container mt-4">
+                      <div class="accordion" id="requestsAccordion">
+                        <div *ngFor="let requestDetails of paginatedRequestList; let i = index" class="card mb-3 shadow-sm">
+                          <div class="card-header" (click)="togglePanel(i)">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <div class="user-details">
+                                <i class="fas fa-user mr-2" style="color: #11387F;"></i>
+                                <span class="user-name">{{ requestDetails.userName }}</span>
+                                <i class="fas fa-envelope ml-3 mr-2" style="color: #11387F;"></i>
+                                <span class="user-email">{{ requestDetails.userEmail }}</span>
+                                <i class="fas fa-calendar-alt ml-3 mr-2" style="color: #11387F;"></i>
+                                <span class="request-date">{{ requestDetails.requestDate | date: 'shortDate' }}</span>
+                              </div>
+                              <button class="btn btn-icon-toggle" type="button">
+                                <i [ngClass]="{'fa-chevron-down': isPanelOpen(i), 'fa-chevron-up': !isPanelOpen(i)}" class="fas" style="color: #11387F;"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div *ngIf="isPanelOpen(i)" class="card-body">
+                            
+              
+                            <table class="table table-bordered mt-3">
+                              <thead>
+                                <tr style="background-color: #11387F; color: #fff;">
+                                  <th>Serial Number</th>
+                                  <th>Brand</th>
+                                  <th>Type</th>
+                                  <th>Specification ID</th>
+                                  <th>Location</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let equipment of requestDetails.equipments">
+                                  <td>{{ equipment.serialNumber }}</td>
+                                  <td>{{ equipment.brand }}</td>
+                                  <td>{{ equipment.type }}</td>
+                                  <td>{{ equipment.specificationId }}</td>
+                                  <td>{{ equipment.location }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+              
+                            <div class="mt-3 d-flex justify-content-end">
+                              <button class="btn btn-success mr-2" (click)="openRequestModal(requestDetails, 'approved')" data-bs-toggle="tooltip" title="Approve the selected equipment. Unselected ones will be rejected.">
+                                Approve
+                              </button>
+                              <button class="btn btn-danger" (click)="openRequestModal(requestDetails, 'rejected')" data-bs-toggle="tooltip" title="Reject all the equipment.">
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              
+                      <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                          <li class="page-item" [class.disabled]="currentPage === 1">
+                            <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                              <span aria-hidden="true">&laquo;</span>
+                            </a>
+                          </li>
+                          <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="currentPage === page">
+                            <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+                          </li>
+                          <li class="page-item" [class.disabled]="currentPage === totalPages">
+                            <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                              <span aria-hidden="true">&raquo;</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </ng-container>
+                  <ng-template #noRequestsMessage>
+                    <div class="no-requests-message text-center">No new requests found.</div>
+                  </ng-template>
                 </div>
-              </div>
-              <ng-template #noRequestsMessage>
-                <p class="no-requests-message">No requests found for the user.</p>
-              </ng-template>
-            </div>
-            <!-- Request status table for admin -->
-            <div *ngIf="!loading && (role.role === 'admin'||role.role === 'manager')">
-              <div *ngIf="requestWithUserDetailsList.length > 0; else noRequestsMessage">
-                <div class="table-container">
-                  <table class="table table-striped">
-                    <thead class="thead-dark">
-                      <tr>
-                        <th>User Name</th>
-                        <th>User Email</th>
-                        <th>Type</th>
-                        <th>Brand</th>
-                        <th>Specification ID</th>
-                        <th>Request Location</th>
-                        <th>Request Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let requestDetails of requestWithUserDetailsList">
-                        <td>{{ requestDetails.userName }}</td>
-                        <td>{{ requestDetails.userEmail }}</td>
-                        <td>{{ requestDetails.type }}</td>
-                        <td>{{ requestDetails.brand }}</td>
-                        <td>{{ requestDetails.specificationId }}</td>
-                        <td>{{ requestDetails.requestLocation }}</td>
-                        <td>{{ requestDetails.requestDate | date:'yyyy-MM-dd' }}</td>
-
-                        <td>
-                          <!-- Approve and reject buttons -->
-                          <button class="btn btn-success btn-sm me-2" (click)="openRequestModal(requestDetails,'Approve Request')">Approve</button>
-                          <button class="btn btn-danger btn-sm" (click)="openRequestModal(requestDetails,'Reject Request')">Reject</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <ng-template #noRequestsMessage>
-                <p class="no-requests-message">No requests found.</p>
-              </ng-template>
-            </div>
-          </div>
+              </section>
+              
+     
         </div>
       </div>
     </div>
-  </div>
   </section>
+  
+
+
   <app-app-request-confirmation-modal
-  *ngIf="showRequestModal"
-  [title]="modalTitle" 
-  [equipment]="selectedEquipment"
-  (confirm)="confirmRequest()"
-  (cancel)="cancelRequest()"
-  (close)="changep()"
-  >
-</app-app-request-confirmation-modal>
+    *ngIf="showRequestModal"
+    [title]="modalTitle"
+    [requestData]="selectedEquipment"
+    (cancel)="cancelRequest()"
+  ></app-app-request-confirmation-modal>
+
+
+
+  
+</div>

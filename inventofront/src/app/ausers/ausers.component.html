@@ -27,10 +27,10 @@
                       <td>{{ employee.position }}</td>
                       <td>{{ employee.role }}</td>
                       <td>
-                        <button class="btn btn-outline-info btn-sm mr-2" [routerLink]="['/requesthistory', employee.userId,'request-history']">
+                        <button class="btn btn-outline-info btn-sm mr-2" [routerLink]="['/requesthistory', employee.userID,'request-history']">
                           <i class="fas fa-history"></i> Request History
                         </button>
-                        <button class="btn btn-outline-warning btn-sm" [routerLink]="['/requesthistory', employee.userId,'issued-gatepass']">
+                        <button class="btn btn-outline-warning btn-sm" [routerLink]="['/requesthistory', employee.userID,'issued-gatepass']">
                           <i class="fas fa-assignment"></i> Issued Gatepass
                         </button>
                       </td>

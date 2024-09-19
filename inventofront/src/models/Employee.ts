@@ -1,5 +1,5 @@
 export interface Employee {
-    userId: string;
+    userID: string;
     fname: string;
     lname: string;
     role: string;

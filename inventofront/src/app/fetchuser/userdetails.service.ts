@@ -1,65 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, catchError, of, tap, throwError } from 'rxjs';
 import { Employee } from '../../models/Employee';
-
-
+import { environment } from '../../../environments/environment.prod'; // Adjust the import path as needed
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 const GRAPH_ENDPOINT1 = 'https://graph.microsoft.com/v1.0/me/photo/$value';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserdetailsService {
-  private apiUrl = 'https://localhost:44378/api/Profile/Insert';
+  private apiUrl = environment.apiUrl; // Use the API base URL from environment
+  private userSubject = new BehaviorSubject<Profilee | null>(null);
+  private userRoleSubject = new BehaviorSubject<any | null>(null);
+  private profilePhotoSubject = new ReplaySubject<Blob>(1);
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {}
 
-    
+  getuser(): Observable<Profilee> {
+    if (this.userSubject.value) {
+      return of(this.userSubject.value);
+    } else {
+      console.log("Fetching user details");
+      return this.http.get<Profilee>(GRAPH_ENDPOINT).pipe(
+        tap(user => this.userSubject.next(user))
+      );
+    }
   }
 
-  getuser(){
-   return this.http.get<Profilee>(GRAPH_ENDPOINT);
-  }
+
 
   getuserProfilePhoto(): Observable<Blob> {
-    console.log("I was called again");
-    return this.http.get(GRAPH_ENDPOINT1, { responseType: 'blob' }).pipe(
-      tap({
-        next: (data) => {
-          console.log('Data received:', data);
-        },
-        error: (error) => {
-          console.error('Error:', error);
-        }
-      }),
-      catchError(this.handleError)
-    );
-  }
-  
-  private handleError(error: HttpErrorResponse) {
-    // Handle the error here
-    console.error('An error occurred:', error.error);
-    return throwError(() => new Error('Something bad happened; please try again later.'));
-  }
-  
-
-  insertProfile(profile:Profilee){
-    return this.http.post<any>(this.apiUrl,profile);
+    console.log("Fetching user profile photo");
+    return this.http.get<Blob>(GRAPH_ENDPOINT1, { responseType: 'blob' as 'json' });
   }
 
-  getUserRole(userId: string) {
-    console.log("userID",userId);
-    return this.http.get<any>(`https://localhost:44378/api/Profile/${userId}`, {
-
-    });
+  insertProfile(profile: Profilee) {
+    return this.http.post<any>(`${this.apiUrl}/Profile/Insert`, profile);
   }
 
-  getallEmployees(): Observable<Employee[]> {
-    return this.http.get<Employee[]>('https://localhost:44378/api/Profile/allemployes');
+  getUserRole(userId: string): Observable<any> {
+    if (this.userRoleSubject.value) {
+      console.log("i was already  hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+      return of(this.userRoleSubject.value);
+    } else {
+      console.log("Fetching user role for userID:", userId);
+      return this.http.get<any>(`${this.apiUrl}/Profile/${userId}`).pipe(
+        tap(role => this.userRoleSubject.next(role))
+      );
+    }
   }
 
 
+  getallEmployees(userid: string): Observable<Employee[]> {
+    console.log("Fetching all employees for userID:", userid);
+    return this.http.get<any>(`${this.apiUrl}/Profile/allemployes?userid=${userid}`);
+  }
 }
 
 export interface Profilee {
@@ -67,5 +64,5 @@ export interface Profilee {
   surname: string,
   userPrincipalName: string,
   id: string,
-  jobTitle:string
+  jobTitle: string
 };

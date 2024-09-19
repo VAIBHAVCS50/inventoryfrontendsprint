@@ -1,41 +1,62 @@
-<div class="bodd">
+<div class="bodd" *ngIf="customDetails">
+  <div class="container mt-5">
+    <div class="header text-center">
+      <h2 class="text-primary"><i class="fa fa-info-circle"></i> Gatepass Details</h2>
+    </div>
 
-    <div *ngIf="customDetails" class="container mt-5">
-        <h2 class="text-center mb-4"><i class="fa fa-info-circle"></i> Gatepass Details</h2>
-        
-        <div class="card">
+    <div class="row">
+      <!-- User Information -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
           <div class="card-body">
-            <h4 class="card-title"><i class="fa fa-user"></i> User Information</h4>
-            <p class="card-text"><strong>User Name:</strong> {{ customDetails.userFirstName }} {{ customDetails.userLastName }}</p>
-            <p class="card-text"><strong>User Email:</strong> {{ customDetails.userEmail }}</p>
-          </div>
-        </div>
-      
-        <div class="card mt-4">
-          <div class="card-body">
-            <h4 class="card-title"><i class="fa fa-cogs"></i> Equipment Information</h4>
-            <p class="card-text"><strong>Brand:</strong> {{ customDetails.brand }}</p>
-            <p class="card-text"><strong>Type:</strong> {{ customDetails.type }}</p>
-            <p class="card-text"><strong>Equipment ID:</strong> {{ customDetails.equipmentId }}</p>
-          </div>
-        </div>
-      
-        <div class="card mt-4">
-          <div class="card-body">
-            <h4 class="card-title"><i class="fa fa-check-circle"></i> Approval Details</h4>
-            <p class="card-text"><strong>Approver Name:</strong> {{ customDetails.approverFirstName }} {{ customDetails.approverLastName }}</p>
-            <p class="card-text"><strong>Issue Date:</strong> {{ customDetails.issueDate | date:'mediumDate' }}</p>
-            <p class="card-text"><strong>Expiry Date:</strong> {{ customDetails.expiryDate | date:'mediumDate' }}</p>
-          </div>
-        </div>
-      
-        <div class="card mt-4">
-          <div class="card-body">
-            <h4 class="card-title"><i class="fa fa-map-marker"></i> Location</h4>
-            <p class="card-text"><strong>Location:</strong> {{ customDetails.location }}</p>
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon bg-primary text-white">
+                <i class="fa fa-user"></i>
+              </div>
+              <h4 class="card-title text-primary ml-3">User Information</h4>
+            </div>
+            <p class="card-text"><strong>Name:</strong> {{ customDetails.userName }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ customDetails.userEmail }}</p>
           </div>
         </div>
       </div>
-      
+
+      <!-- Approval Details -->
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon bg-warning text-white">
+                <i class="fa fa-check-circle"></i>
+              </div>
+              <h4 class="card-title text-warning ml-3">Approval Details</h4>
+            </div>
+            <p class="card-text"><strong>Approver 1:</strong> {{ customDetails.approver1 }}</p>
+            <p class="card-text"><strong>Approver 2:</strong> {{ customDetails.approver2 }}</p>
+            <p class="card-text"><strong>Issue Date:</strong> {{ customDetails.issueDate | date:'mediumDate' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment Information -->
+    <div class="row">
+      <div class="col-md-12 mb-4" *ngFor="let equipment of customDetails.equipments">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon bg-success text-white">
+                <i class="fa fa-cogs"></i>
+              </div>
+              <h4 class="card-title text-success ml-3">Equipment Information</h4>
+            </div>
+            <p class="card-text"><strong>Brand:</strong> {{ equipment.brand }}</p>
+            <p class="card-text"><strong>Type:</strong> {{ equipment.type }}</p>
+            <p class="card-text"><strong>Serial Number:</strong> {{ equipment.serialNumber }}</p>
+            <p class="card-text"><strong>Location:</strong> {{ equipment.location }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  
+</div>

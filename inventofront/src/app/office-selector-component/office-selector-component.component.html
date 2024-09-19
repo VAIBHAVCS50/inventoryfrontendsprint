@@ -1,0 +1,7 @@
+<div class="form-group">
+    <select class="form-control" id="office" [(ngModel)]="selectedOffice" (change)="onOfficeChange()">
+      <option value="">Select an office</option>
+      <option *ngFor="let office of offices" [value]="office">{{ office }}</option>
+    </select>
+  </div>
+  

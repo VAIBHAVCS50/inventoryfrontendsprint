@@ -47,54 +47,70 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ title }}</h5>
+          <h3 class="modal-title">{{ title }}</h3>
         </div>
         <div class="modal-body">
-            <ng-container *ngIf="title === 'Approve Request' || title === 'Reject Request'">
-            <dl class="row">
-              <dt class="col-sm-4">User Name:</dt>
-              <dd class="col-sm-8">{{ equipment.userName }}</dd>
-    
-              <dt class="col-sm-4">Email:</dt>
-              <dd class="col-sm-8">{{ equipment.userEmail }}</dd>
-              
-              <dt class="col-sm-4">Brand:</dt>
-              <dd class="col-sm-8">{{ equipment.brand }}</dd>
-
-              <dt class="col-sm-4">Type:</dt>
-              <dd class="col-sm-8">{{ equipment.Type }}</dd>
-
-              <dt class="col-sm-4">Location:</dt>
-              <dd class="col-sm-8">{{ equipment.requestLocation }}</dd>
-
-              <dt class="col-sm-4">Specification ID:</dt>
-              <dd class="col-sm-8">{{ equipment.specificationId }}</dd>
-              <!-- Add more details as needed -->
-            </dl>
-          </ng-container>
-          <!-- Add more ng-container blocks for other titles -->
-          <ng-container *ngIf="title != 'Confirm Approval'">
-            <dl class="row">
-                <dt class="col-sm-4">Specification ID:</dt>
-                <dd class="col-sm-8">{{ equipment?.categoryId }}</dd>
-      
-                <dt class="col-sm-4">Brand:</dt>
-                <dd class="col-sm-8">{{ equipment?.brand }}</dd>
-      <br>
-                <dt class="col-sm-4">Quantity:</dt>
-                <dd class="col-sm-8">{{ equipment?.requestedQuantity }}</dd>
-        <br>
-                <dt class="col-sm-4">Description:</dt>
-                <dd class="col-sm-8">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, magnam?</dd>
-              </dl>
-          </ng-container>
+          <div *ngIf="title === 'Request Confirmation'; else approvedRejected">
+            <div *ngIf="requestData && requestData.length; else noItems">
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let item of requestData">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h3>
+                        <i class="fas fa-box"></i> {{ item.categoryName }}
+                      </h3>
+                      <p>
+                        <strong>Category ID:</strong> {{ item.categoryId }}<br>
+                        <strong>Brand:</strong> {{ item.brand }}<br>
+                        <strong>Requested Quantity:</strong> {{ item.requestedQuantity }}
+                      </p>
+                    </div>
+                    <div>
+                      <i class="fas fa-check-circle text-success" *ngIf="item.quantity >= item.requestedQuantity"></i>
+                      <i class="fas fa-times-circle text-danger" *ngIf="item.quantity < item.requestedQuantity"></i>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <ng-template #noItems>
+              <p>No items to display.</p>
+            </ng-template>
+          </div>
+          <ng-template #approvedRejected>
+            <div *ngIf="requestData">
+              <p><strong>Request ID:</strong> {{ requestData.requestId }}</p>
+              <p><strong>User ID:</strong> {{ requestData.userId }}</p>
+              <p><strong>User Name:</strong> {{ requestData.userName }}</p>
+              <p><strong>User Email:</strong> {{ requestData.userEmail }}</p>
+              <p><strong>User Role:</strong> {{ requestData.userRole }}</p>
+              <p><strong>Request Date:</strong> {{ requestData.requestDate }}</p>
+              <p><strong>Equipments:</strong></p>
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let item of requestData.equipments">
+                  <div>
+                    <p><strong>Serial Number:</strong> {{ item.serialNumber }}</p>
+                    <p><strong>Brand:</strong> {{ item.brand }}</p>
+                    <p><strong>Type:</strong> {{ item.type }}</p>
+                    <p><strong>Specification ID:</strong> {{ item.specificationId }}</p>
+                    <p><strong>Location:</strong> {{ item.location }}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+          <!-- Remarks Field -->
+          <div *ngIf="!(title === 'Request Confirmation')" class="form-group mt-3">
+            <label for="remarks">Remarks</label>
+            <textarea class="form-control" id="remarks" [(ngModel)]="remarks" rows="3"></textarea>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="cancelRequest()">Cancel</button>
-          <button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelRequest()">Cancel</button>
+          <button  *ngIf="title === 'Request Confirmation'" type="button" class="btn btn-primary" (click)="confirmRequestwithoutremark()">Confirm</button>
+          <button *ngIf="!(title === 'Request Confirmation')" type="button" class="btn btn-primary" (click)="confirmRequestwithremark()">Confirm</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="modal-backdrop fade show"></div>
   

@@ -1,0 +1,31 @@
+
+<div *ngIf="loading" class="loader-container">
+  <app-loader></app-loader>
+</div>
+<h3>Settings</h3>
+<div *ngIf="!loading" class="settings-container">
+  <div class="form-check form-switch mb-2">
+    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" [(ngModel)]="multiFactorAuth">
+    <label class="form-check-label" for="flexSwitchCheckDefault">Two factor autentication</label>
+  </div>
+  <button [disabled]="multiFactorAuth === initial" class="btn btn-primary btn-block" (click)="saveSettings()">Save</button>
+</div>
+
+
+<ng-template #excelDataModal let-modal>
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Settings Changes</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      {{modalMessage}}
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="modal.dismiss()">Cancel</button>
+
+    </div>
+  </div>
+
+</ng-template>

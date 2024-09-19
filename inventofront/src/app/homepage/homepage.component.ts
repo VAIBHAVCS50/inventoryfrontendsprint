@@ -11,6 +11,7 @@ import {Profilee} from '../profile/profile.component';
 import { SignalRService } from '../signal-r.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertmessageService } from '../alertmessage.service';
+import { CartserviceService } from '../cartservice.service';
 // import { SelfupdateService } from '../selfupdate.service';
 
 @Component({
@@ -22,7 +23,14 @@ export class HomepageComponent implements OnInit {
   requestInProgress:boolean=false;
   @ViewChild('modalContent') modalContent!: TemplateRef<any>;
 modalTitle: string='Request Comformation';
-
+currentPage: number = 1;
+  pageSize: number = 10; // Number of items per page
+  pages: number[] = [];
+  searchDisabled: boolean = false; // For disabling search button
+  
+  onFilterChange() {
+    this.searchDisabled = false; // Enable the search button on filter change
+  }
 increaseQuantity(equipment: CategoryDetails) {
   if (equipment.requestedQuantity < equipment.quantity) {
     equipment.requestedQuantity++;
@@ -82,7 +90,8 @@ decreaseQuantity(equipment: CategoryDetails) {
   private authStatusSubscription!: Subscription;
   activeOrdersSubscription?: Subscription;
   equipments!: CategoryDetails[];
-  constructor(private alertmessage:AlertmessageService,private modalService: NgbModal,private signalRService:SignalRService,private ele:UserdetailsService,private equipmentService: RequestequipmentService,private categoryDetailsService: GetequipmentService,public alfa:IsloggedinService,public sbg:MsalService,public apiservice:FilterdropdownService) {
+  constructor(    private cartService: CartserviceService
+    ,private alertmessage:AlertmessageService,private modalService: NgbModal,private signalRService:SignalRService,private ele:UserdetailsService,private equipmentService: RequestequipmentService,private categoryDetailsService: GetequipmentService,public alfa:IsloggedinService,public sbg:MsalService,public apiservice:FilterdropdownService) {
    
    }
 
@@ -97,7 +106,14 @@ decreaseQuantity(equipment: CategoryDetails) {
   changep(){
     this.showRequestModal = false;
   }
-  
+
+  selectedOffice: string = '';
+
+  onOfficeSelected(office: string): void {
+    this.selectedOffice = office;
+    this.fetchFilterOptions(); 
+  }
+
   confirmRequest() {
     // Handle request confirmation
     this.requestEquipment(this.selectedEquipment);
@@ -119,7 +135,7 @@ decreaseQuantity(equipment: CategoryDetails) {
 
 
     this.isAuthenticated = this.sbg.instance.getAllAccounts().length > 0;
-    this.fetchFilterOptions(); 
+
     this.authStatusSubscription = this.alfa.getAuthenticationStatus$()
       .subscribe((isLoggedIn: boolean) => {
         this.isAuthenticated = isLoggedIn;
@@ -127,21 +143,26 @@ decreaseQuantity(equipment: CategoryDetails) {
         console.log(this.isAuthenticated);
             
       });
+      
+
+      
   }
+
   fetchFilterOptions(): void {
-    this.apiservice.getAllBrands(this.selectedType).subscribe((brands: string[]) => {
+    this.apiservice.getAllBrands(this.selectedOffice,this.selectedType).subscribe((brands: string[]) => {
+      console.log(brands);
       this.brands = brands;
     });
 
-    this.apiservice.getAllTypes(this.selectedBrands).subscribe((types: string[]) => {
+    this.apiservice.getAllTypes(this.selectedOffice,this.selectedBrands).subscribe((types: string[]) => {
       this.types = types;
     });
 
-    this.apiservice.getAllSpecifications(this.selectedBrands,this.selectedType).subscribe((specifications: number[]) => {
+    this.apiservice.getAllSpecifications(this.selectedOffice,this.selectedBrands,this.selectedType).subscribe((specifications: number[]) => {
       this.specifications = specifications;
     });
   }
-
+  
   
   onBrandChange(): void {
     this.fetchFilterOptions(); // Update types and specifications based on selected brand
@@ -159,7 +180,12 @@ decreaseQuantity(equipment: CategoryDetails) {
     }
   }
 
+
+  totalPages: number = 0;
+
+
   showEquipments(): void {
+    this.searchDisabled = true; // Disable the search button on click
     this.requestInProgress = true;
     this.ele.getuser()
     .subscribe(profile => {
@@ -167,19 +193,50 @@ decreaseQuantity(equipment: CategoryDetails) {
       this.profile = profile;
       console.log(this.profile);
     });
-    this.categoryDetailsService.getCategoryDetails(this.selectedBrands, this.selectedType, this.selectedSpecId)
+    this.categoryDetailsService.getCategoryDetails(this.selectedOffice,this.selectedBrands, this.selectedType, this.selectedSpecId)
     .subscribe((data: CategoryDetails[]) => {
       this.equipments = data.map(equipment => ({
         ...equipment,
         requestedQuantity: 0 // Initialize requestedQuantity to 0 for each equipment
       }));
       this.requestInProgress = false; // Hide loader once data is fetched
+      this.calculatePages();
+      this.currentPage = 1; 
     });
   }
+
+  calculatePages(): void {
+    this.totalPages = Math.ceil(this.equipments.length / this.pageSize);
+
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+
+
+
+  message: string = '';
+ loading:boolean=false;
+  addToCart(equipment: any) {
+    const added = this.cartService.addToCart({ ...equipment, requestedQuantity: 1 });
+    if (added) {
+      this.message = 'Product added to cart!';
+      this.alertmessage.showSnackBar('Product added to cart!.');
+    } else {
+      this.message = 'Product is already in the cart.';
+      this.alertmessage.showSnackBar('Product is already in the cart!.');
+    }
+  }
 specIDD:any;
-loadGatepasses(specId: any) {
-  this.equipmentService.getGatepassesBySpecId(specId).subscribe(
+loadGatepasses(adoffice:string,specId: any) {
+  this.loading=true;
+  this.equipmentService.getGatepassesBySpecId(adoffice,specId).subscribe(
     data => {
+      this.loading=false;
       this.gatepasses = data;
       console.log(this.gatepasses);
       this.modalService.open(this.modalContent, { centered: true });
@@ -194,8 +251,10 @@ loadGatepasses(specId: any) {
   gatepasses!: any[];
   
   openModal(specId: any) {
+    console.log(specId);
     this.specIDD = specId;
-    this.loadGatepasses(this.specIDD); 
+
+    this.loadGatepasses(specId.adoffice,specId.categoryId);
     // this.modalService.open(this.modalContent, { centered: true }); // Open the modal with the template reference
   }
   

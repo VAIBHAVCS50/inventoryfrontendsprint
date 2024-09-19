@@ -1,0 +1,44 @@
+
+/* src/app/components/shelf-life-analysis/shelf-life-analysis.component.scss */
+
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1.5rem; /* Adjust as needed */
+  }
+  
+  .form-control {
+    background-color: #fff; /* Form input background color */
+    color: #11387F; /* Form input text color */
+    border-color: #11387F; /* Form input border color */
+  }
+  
+  .btn-secondary {
+    background-color: #11387F; /* Button background color */
+    color: white; /* Button text color */
+    border-color: #11387F; /* Button border color */
+  }
+  
+  .btn-secondary:hover {
+    background-color: #092051; /* Button background color on hover */
+    border-color: #092051; /* Button border color on hover */
+  }
+  
+  .table {
+    background-color: #fff; /* Table background color */
+  }
+  
+  th,
+  td {
+    color: #050912; /* Table cell text color */
+  }
+  
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }

@@ -1,0 +1,58 @@
+<div class="bodd">
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header text-center" style="background-color: #11387F; color: white; font-size: 18px;">
+                Issued Gatepasses
+            </div>
+            <div class="card-body p-3">
+                <div class="form-group mb-3 position-relative">
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm rounded-pill pl-4" 
+                        placeholder="Start typing name..." 
+                        [(ngModel)]="searchTerm" 
+                        (input)="filterEmployees()"
+                        style="padding-left: 30px;">
+                    <i class="fas fa-search position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%); color: #aaa;"></i>
+                </div>
+                <div *ngIf="filteredEmployees.length > 0">
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Current Role</th>
+                                <th>New Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let employee of filteredEmployees">
+                                <td>{{ employee.fname }} {{ employee.lname }}</td>
+                                <td>{{ employee.email }}</td>
+                                <td>{{ employee.role }}</td>
+                                <td>
+                                    <select [(ngModel)]="employee.newRole" class="form-select form-select-sm">
+                                        <ng-container *ngFor="let role of roles">
+                                            <option *ngIf="role.role !== employee.role" [value]="role.role">
+                                                {{ role.role }}
+                                            </option>
+                                        </ng-container>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" (click)="updateRole(employee)">
+                                        Confirm
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p *ngIf="searchTerm && filteredEmployees.length === 0" class="text-center text-muted">
+                    No employees found.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,36 +1,52 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import {CategoryDetails} from '../../models/EquipmentetailsModel';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-app-request-confirmation-modal',
   templateUrl: './app-request-confirmation-modal.component.html',
   styleUrl: './app-request-confirmation-modal.component.scss'
 })
-export class AppRequestConfirmationModalComponent {
-  @Input() equipment: any;
-  @Output() confirm: EventEmitter<void> = new EventEmitter<void>();
-  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
+export class AppRequestConfirmationModalComponent implements OnInit {
+  @Input() requestData: any;
+  // @Output() confirm = new EventEmitter<{ action: string, remarks: string }>();
+  // @Output() confirmwitoutremark = new EventEmitter<void>();
+  // @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+  // @Output() close: EventEmitter<void> = new EventEmitter<void>();
   @Input() title!: string;
+  remarks: string = '';
 
-  constructor(private modalService: NgbModal) {}
+  constructor(public activeModal: NgbActiveModal,private modalService: NgbModal) {}
+  ngOnInit(): void {
+    console.log(this.title);
+    console.log(this.requestData);
+  }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['equipment']) {
-      console.log('Equipment received in modal:', this.equipment);
+    if (changes['requestData']) {
+      console.log('Equipment received in modal:', this.requestData);
     }
   }
   
-  confirmRequest() {
-    this.confirm.emit();
+  confirmRequestwithremark() {
+    this.activeModal.close({ confirmed: true, remarks: this.remarks });
   }
 
-  cancelRequest() {
-    this.cancel.emit();
+  confirmRequestwithoutremark(){
+    this.activeModal.close("confirmed");
+
   }
+  cancelRequest() {
+    // Logic to cancel the request
+    this.activeModal.dismiss('cancelled');
+  }
+
 
   onClose() {
-    this.close.emit();
+    this.activeModal.close();
   }
 
 }
+
+
+
+

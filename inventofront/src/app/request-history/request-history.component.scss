@@ -1,0 +1,39 @@
+.container {
+  .card {
+    border: none;
+    .card-header {
+      
+      color: white;
+      background-color: #11387F;
+    }
+    .table {
+      th, td {
+        vertical-align: middle;
+      }
+      .badge {
+        font-size: 14px;
+        padding: 0.5em;
+      }
+      .badge-warning {
+        background-color: #ffc107;
+        color: #212529;
+      }
+    }
+  }
+
+  .pagination {
+    .page-item.active .page-link {
+      background-color: #1748a3;
+      border-color: #cbd0d8;
+    }
+    .page-item .page-link {
+      color: #000000;
+    }
+  }
+
+  .no-data {
+    .alert {
+      font-size: 18px;
+    }
+  }
+}

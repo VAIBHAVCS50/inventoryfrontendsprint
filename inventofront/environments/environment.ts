@@ -1,4 +1,4 @@
 export const environment={
     production: false,
-    apiEndpoint: 'https://localhost:4200/api/v1/',
+    apiUrl: 'https://inventbackend20240619100427.azurewebsites.net/api',
 }

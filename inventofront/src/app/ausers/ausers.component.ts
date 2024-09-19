@@ -20,14 +20,18 @@ viewRequestHistory(_t18: Employee) {
   employees: Employee[] = [];
  employee!:Employee;
 constructor(private asd:UserdetailsService){}
-
+profile!:any;
 ngOnInit(): void {
   this.fetchEmployees();
 }
 displayedColumns: string[] = ['name', 'email', 'designation', 'role', 'actions'];
 fetchEmployees(): void {
   this.requestInProgress=true;
-  this.asd.getallEmployees()
+  const storedProfile = localStorage.getItem('profile');
+    if (storedProfile) {
+      this.profile = JSON.parse(storedProfile);
+    }
+  this.asd.getallEmployees(this.profile.id)
     .subscribe(
       (employees: Employee[]) => {
         this.employees = employees;
