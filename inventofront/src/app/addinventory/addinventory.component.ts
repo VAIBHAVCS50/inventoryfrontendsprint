@@ -20,8 +20,8 @@ export class AddinventoryComponent implements OnInit {
   excelData: any[] = [];
   file!: File;
   showTooltip: boolean = false;
-  brands: string[] = [];
-  types: string[] = [];
+  brands: string[] = ['Custom'];
+  types: string[] = ['Custom'];
   inventoryForm!: FormGroup;
 
   constructor(
@@ -35,20 +35,27 @@ export class AddinventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+
+  }
+  selectedOffice: string = '';
+
+  onOfficeSelected(office: string): void {
+    this.selectedOffice = office;
     this.fetchBrands();
     this.fetchTypes();
   }
 
+
   formFields = [
-    { id: 'specId', label: 'Item code', icon: 'fas fa-id-badge', controlName: 'specId', type: 'input', error: 'Specification ID is required.', placeholder: '', options: [], changeEvent: null },
-    { id: 'brand', label: 'Brand', icon: 'fas fa-barcode', controlName: 'brand', type: 'select', error: 'Brand is required.', placeholder: 'Select your brand', options: this.brands, changeEvent: this.onBrandChange.bind(this) },
-    { id: 'type', label: 'Type', icon: 'fas fa-tags', controlName: 'type', type: 'select', error: 'Type is required.', placeholder: 'Select your type', options: this.types, changeEvent: this.onTypeChange.bind(this) },
-    { id: 'description', label: 'Description', icon: 'fas fa-shapes', controlName: 'description', type: 'textarea', error: '', placeholder: '', options: [], changeEvent: null },
-    { id: 'location', label: 'Location', icon: 'fas fa-align-left', controlName: 'location', type: 'textarea', error: 'Location is required.', placeholder: '', options: [], changeEvent: null },
-    { id: 'equipmentId', label: 'Serial number', icon: 'fas fa-map-marker-alt', controlName: 'equipmentId', type: 'input', error: 'Serial number is required.', placeholder: '', options: [], changeEvent: null },
-    { id: 'equipmentStatus', label: 'Equipment status', icon: 'fas fa-info-circle', controlName: 'equipmentStatus', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
-    { id: 'availabilityStatus', label: 'Availability status', icon: 'fas fa-clock', controlName: 'availabilityStatus', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
-    { id: 'Adoffice', label: 'Ad office', icon: 'fas fa-clock', controlName: 'Adoffice', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
+    { id: 'Item code', label: 'Item code', icon: 'fas fa-id-badge', controlName: 'specId', type: 'input', error: 'Specification ID is required.', placeholder: '', options: [], changeEvent: null },
+    { id: 'Brand', label: 'Brand', icon: 'fas fa-barcode', controlName: 'brand', type: 'select', error: 'Brand is required.', placeholder: 'Select your brand', options: this.brands, changeEvent: this.onBrandChange.bind(this) },
+    { id: 'Type', label: 'Type', icon: 'fas fa-tags', controlName: 'type', type: 'select', error: 'Type is required.', placeholder: 'Select your type', options: this.types, changeEvent: this.onTypeChange.bind(this) },
+    { id: 'Description', label: 'Description', icon: 'fas fa-shapes', controlName: 'description', type: 'textarea', error: '', placeholder: '', options: [], changeEvent: null },
+    { id: 'Location', label: 'Location', icon: 'fas fa-align-left', controlName: 'location', type: 'textarea', error: 'Location is required.', placeholder: '', options: [], changeEvent: null },
+    { id: 'Serial number', label: 'Serial number', icon: 'fas fa-map-marker-alt', controlName: 'equipmentId', type: 'input', error: 'Serial number is required.', placeholder: '', options: [], changeEvent: null },
+    // { id: 'equipmentStatus', label: 'Equipment status', icon: 'fas fa-info-circle', controlName: 'equipmentStatus', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
+    // { id: 'availabilityStatus', label: 'Availability status', icon: 'fas fa-clock', controlName: 'availabilityStatus', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
+    // { id: 'Adoffice', label: 'Ad office', icon: 'fas fa-clock', controlName: 'Adoffice', type: 'input', error: '', placeholder: '', options: [], changeEvent: null },
    
   ];
 
@@ -67,17 +74,29 @@ export class AddinventoryComponent implements OnInit {
   }
 
   fetchTypes() {
-    this.apiservice.getAllTypes(this.inventoryForm.get('brand')?.value).subscribe((types: string[]) => {
+    this.apiservice.getAllTypes(this.selectedOffice,this.inventoryForm.get('brand')?.value).subscribe((types: string[]) => {
       this.types = types;
+      this.updateFormFieldOptions('type', this.types);
+
     });
   }
 
   fetchBrands() {
-    this.apiservice.getAllBrands(this.inventoryForm.get('type')?.value).subscribe((brands: string[]) => {
+    this.apiservice.getAllBrands(this.selectedOffice,this.inventoryForm.get('type')?.value).subscribe((brands: string[]) => {
       this.brands = brands;
+      this.updateFormFieldOptions('brand', this.brands);
     });
   }
-
+  updateFormFieldOptions(controlName: string, options: string[]) {
+    const field = this.formFields.find(f => f.controlName === controlName);
+    console.log(options);
+    console.log(controlName);
+    if (field) {
+      options.push('Custom');
+      field.options = options;
+    }
+  }
+  
   onBrandChange(event: any) {
     const selectedBrand = event.target.value;
     if (selectedBrand === 'Custom') {
@@ -98,7 +117,7 @@ export class AddinventoryComponent implements OnInit {
 
   addCustomType(customType: string) {
     if (customType) {
-      this.types.push(customType);
+      this.types.unshift(customType);
       this.inventoryForm.get('type')?.setValue(customType);
       this.modalService.dismissAll();
     }
@@ -110,7 +129,7 @@ export class AddinventoryComponent implements OnInit {
 
   addCustomBrand(customBrand: string) {
     if (customBrand) {
-      this.brands.push(customBrand);
+      this.brands.unshift(customBrand);
       this.inventoryForm.get('brand')?.setValue(customBrand);
       this.modalService.dismissAll();
     }
@@ -132,22 +151,25 @@ export class AddinventoryComponent implements OnInit {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       this.excelData = XLSX.utils.sheet_to_json(sheet, { raw: true });
+      console.log(this.excelData);
       this.openModal(this.excelDataModal);
     };
     fileReader.readAsArrayBuffer(this.file);
   }
 
   processExcelData(data: any[]) {
+    console.log(data);
+    console.log("asfdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
     const inventoryItems = data.map(item => ({
-      location: item['location'],
-      equipmentId: item['equipmentId'],
-      specId: item['specId'],
-      type: item['type'],
-      brand: item['brand'],
-      description: item['description'],
-      equipmentStatus: item['equipmentStatus'],
-      availabilityStatus: item['availabilityStatus'],
-      adoffice:item['Adoffice']
+      location: item['Location'],
+      equipmentId: item['Serial number'],
+      specId: item['Item code'],
+      type: item['Type'],
+      brand: item['Brand'],
+      description: item['Description'],
+      equipmentStatus: 0,
+      availabilityStatus: 0,
+      adoffice:this.selectedOffice
     }));
 
     this.mser.addBatchInventory(inventoryItems).subscribe(
@@ -172,11 +194,11 @@ export class AddinventoryComponent implements OnInit {
         type: this.inventoryForm.value.type,
         brand: this.inventoryForm.value.brand,
         description: this.inventoryForm.value.description,
-        equipmentStatus: this.inventoryForm.value.equipmentStatus,
-        availabilityStatus: this.inventoryForm.value.availabilityStatus,
-        adoffice:this.inventoryForm.value.adoffice
+        equipmentStatus: 0,
+        availabilityStatus: 0,
+        adoffice:this.selectedOffice
       };
-
+      console.log(inventoryItem);
       this.mser.addBatchInventory([inventoryItem]).subscribe(
         (response: any) => {
           console.log('Inventory added successfully:', response);
@@ -197,6 +219,8 @@ export class AddinventoryComponent implements OnInit {
       size: 'lg', // Use 'lg' for large, 'sm' for small, or a custom class
       windowClass: 'custom-modal-class'
     };
+    console.log(content);
+    console.log(options);
     this.modalService.open(content, options);
   }
 

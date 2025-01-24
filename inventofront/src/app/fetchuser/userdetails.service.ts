@@ -33,7 +33,7 @@ export class UserdetailsService {
 
   getuserProfilePhoto(): Observable<Blob> {
     console.log("Fetching user profile photo");
-    return this.http.get<Blob>(GRAPH_ENDPOINT1, { responseType: 'blob' as 'json' });
+    return this.http.get(GRAPH_ENDPOINT1, { responseType: 'blob' });  
   }
 
   insertProfile(profile: Profilee) {
@@ -42,7 +42,7 @@ export class UserdetailsService {
 
   getUserRole(userId: string): Observable<any> {
     if (this.userRoleSubject.value) {
-      console.log("i was already  hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    
       return of(this.userRoleSubject.value);
     } else {
       console.log("Fetching user role for userID:", userId);

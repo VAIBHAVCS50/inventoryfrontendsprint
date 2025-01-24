@@ -8,8 +8,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 // import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 // import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MsalGuard, MsalInterceptor, MsalModule, MsalRedirectComponent } from "@azure/msal-angular";
-import { MsalServiceService } from '../app/msal-service.service'; 
-import { InteractionType } from '@azure/msal-browser';
+// import { MsalServiceService } from '../app/msal-service.service'; 
+import { InteractionType, PublicClientApplication } from '@azure/msal-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpClientModule } from  '@angular/common/http';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -51,10 +51,14 @@ import { EquipmentsInPossessionComponent } from './equipments-in-possession/equi
 import { LoginauthenticationComponent } from './loginauthentication/loginauthentication.component';
 import { OfficeSelectorComponentComponent } from './office-selector-component/office-selector-component.component';
 
+import { environment } from '../../environments/environment';
 
 
+const isIE =
+  window.navigator.userAgent.indexOf("MSIE ") > -1 ||
+  window.navigator.userAgent.indexOf("Trident/") > -1;
 
-const msalService = new MsalServiceService();
+// const msalService = new MsalServiceService();
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,20 +89,29 @@ const msalService = new MsalServiceService();
   ],
   imports: [
     MsalModule.forRoot(
-      msalService.getMsalInstance(),
-       {
-        interactionType: InteractionType.Popup, // MSAL Guard Configuration
+      new PublicClientApplication({
+        auth: {
+          clientId: environment.mslConfig.clientId,
+          authority: environment.mslConfig.authority,
+          redirectUri: environment.mslConfig.redirectUri
+        },
+        cache: {
+          cacheLocation: "localStorage",
+          storeAuthStateInCookie: isIE,
+        },
+      }),
+      {
+        interactionType: InteractionType.Popup, // Msal Guard Configuration
         authRequest: {
-          scopes: ['user.read'], // Scopes requested during authentication
+          scopes: ["user.read"],
         },
       },
-        {
-          interactionType: InteractionType.Popup, // MSAL Interceptor Configuration
-          protectedResourceMap: new Map([
-            ['https://graph.microsoft.com/v1.0/me', ['user.read']], // Mapping of protected resources and required scopes
-          ]),
-        }
-
+      {
+        interactionType: InteractionType.Redirect, // MSAL Interceptor Configuration
+        protectedResourceMap: new Map([
+          ["https://graph.microsoft.com/v1.0/me", ["user.read"]]
+        ]),
+      }
     ),
     BrowserModule,
     HttpClientModule,
@@ -133,6 +146,6 @@ const msalService = new MsalServiceService();
       multi: true,
     },
     provideAnimationsAsync()],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent,MsalRedirectComponent]
 })
 export class AppModule { }
